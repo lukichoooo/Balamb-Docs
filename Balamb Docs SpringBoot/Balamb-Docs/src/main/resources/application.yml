@@ -4,5 +4,6 @@ spring:
     username: root
     password: luka123
   jpa:
-    hibernate.ddl-auto: create-drop
+    hibernate:
+      ddl-auto: create-drop
     show-sql: true
