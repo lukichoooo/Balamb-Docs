@@ -1,9 +1,12 @@
 package com.khundadze.Balamb_Docs.services;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.khundadze.Balamb_Docs.dtos.UserRequestDto;
 import com.khundadze.Balamb_Docs.dtos.UserResponseDto;
+import com.khundadze.Balamb_Docs.exceptions.UserNotFoundException;
 import com.khundadze.Balamb_Docs.models.User;
 import com.khundadze.Balamb_Docs.repositories.UserRepository;
 
@@ -26,18 +29,32 @@ public class UserService {
     public UserResponseDto findByName(String name) {
         User user = userRepository.findByName(name);
         if (user == null) {
-            user = new User();
+            throw new UserNotFoundException("User not found with name: " + name);
         }
         return userMapper.toUserResponseDto(user);
     }
 
+    public List<UserResponseDto> findByNameLike(String name) {
+        List<User> users = userRepository.findTop5ByNameStartsWithIgnoreCase(name);
+        if (users.isEmpty()) {
+            throw new UserNotFoundException("User not found with name: " + name);
+        }
+        return users.stream()
+                .map(userMapper::toUserResponseDto)
+                .toList();
+    }
+
     public UserResponseDto findByEmail(String email) {
         User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UserNotFoundException("User not found with email: " + email);
+        }
         return userMapper.toUserResponseDto(user);
     }
 
     public UserResponseDto findById(Long id) {
-        User user = userRepository.findById(id).orElse(new User());
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
         return userMapper.toUserResponseDto(user);
     }
 }

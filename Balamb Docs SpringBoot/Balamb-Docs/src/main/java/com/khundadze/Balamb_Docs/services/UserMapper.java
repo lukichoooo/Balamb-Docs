@@ -15,6 +15,6 @@ public class UserMapper {
     }
 
     public UserResponseDto toUserResponseDto(User user) {
-        return new UserResponseDto(user.getName(), user.getEmail());
+        return new UserResponseDto(user.getId(), user.getName(), user.getEmail());
     }
 }

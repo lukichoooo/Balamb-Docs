@@ -1,11 +1,23 @@
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  /* Typography */
+  --font-family-base: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-weight-normal: 400;
+  --line-height-base: 1.5;
+
+  /* Colors */
+  --color-text: rgba(255, 255, 255, 0.87);
+  --color-background: #1e1e1e;
+  --color-border: #444;
+  --color-accent: #646cff;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  color: var(--color-text);
+  background-color: var(--color-background);
+
+  /* Font rendering */
+  font-family: var(--font-family-base);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-base);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;

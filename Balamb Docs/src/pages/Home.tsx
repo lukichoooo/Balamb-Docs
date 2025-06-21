@@ -6,7 +6,7 @@ export default function Home() {
     const [welcomeText, setWelcomeText] = useState("");
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/welcomeText")
+        fetch("http://localhost:8080/api/home/welcomeText")
             .then(res => res.text())
             .then(data => setWelcomeText(data))
             .catch(() => setWelcomeText("Failed to load"));

@@ -1,7 +1,8 @@
 package com.khundadze.Balamb_Docs.dtos;
 
 public record UserResponseDto(
-                String name,
-                String email) {
+        Long id,
+        String name,
+        String email) {
 
 }
