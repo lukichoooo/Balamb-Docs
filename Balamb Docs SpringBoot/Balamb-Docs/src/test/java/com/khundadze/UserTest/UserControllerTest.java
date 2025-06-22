@@ -54,9 +54,9 @@ public class UserControllerTest {
         String name = "Luka";
         UserResponseDto responseDto = new UserResponseDto(1L, "Luka", "luka@example.com", GlobalRole.USER);
 
-        when(userService.findByName(name)).thenReturn(responseDto);
+        when(userService.findByUsername(name)).thenReturn(responseDto);
 
-        UserResponseDto result = userController.findByName(name);
+        UserResponseDto result = userController.findByUsername(name);
         assertEquals(result, responseDto);
     }
 }

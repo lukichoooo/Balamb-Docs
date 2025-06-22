@@ -36,13 +36,13 @@ public class UserController {
         return userService.findById(id);
     }
 
-    @GetMapping("/findByName/{name}")
-    public UserResponseDto findByName(@PathVariable String name) {
-        return userService.findByName(name);
+    @GetMapping("/findByName/{username}")
+    public UserResponseDto findByUsername(@PathVariable String username) {
+        return userService.findByUsername(username);
     }
 
-    @GetMapping("/findByNameLike/{name}")
-    public List<UserMinimalResponseDto> findByNameLike(@PathVariable String name) {
-        return userService.findByNameLike(name);
+    @GetMapping("/findByNameLike/{username}")
+    public List<UserMinimalResponseDto> findByNameLike(@PathVariable String username) {
+        return userService.findByUsernameLike(username);
     }
 }

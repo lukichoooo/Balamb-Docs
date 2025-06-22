@@ -27,16 +27,16 @@ public class UserService {
         return userMapper.toUserResponseDto(userRepository.save(user));
     }
 
-    public UserResponseDto findByName(String name) {
-        User user = userRepository.findByName(name);
+    public UserResponseDto findByUsername(String name) {
+        User user = userRepository.findByUsername(name);
         if (user == null) {
             throw new UserNotFoundException("User not found with name: " + name);
         }
         return userMapper.toUserResponseDto(user);
     }
 
-    public List<UserMinimalResponseDto> findByNameLike(String name) {
-        List<User> users = userRepository.findTop5ByNameStartsWithIgnoreCase(name);
+    public List<UserMinimalResponseDto> findByUsernameLike(String name) {
+        List<User> users = userRepository.findTop5ByUsernameStartsWithIgnoreCase(name);
         if (users.isEmpty()) {
             throw new UserNotFoundException("User not found with name: " + name);
         }

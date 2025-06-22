@@ -50,7 +50,7 @@ export default function UserSearchBox() {
                 <ul className={styles.dropdown}>
                     {searchResult.map(user => (
                         <li key={user.id} className={styles.item}>
-                            {user.name}
+                            {user.username}
                         </li>
                     ))}
                 </ul>

@@ -78,25 +78,25 @@ public class UserServiceTest {
     }
 
     @Test
-    public void findByName() {
+    public void findByUsername() {
         String name = "Luka";
         User user = new User("Luka", "luka@example.com", "password123", GlobalRole.USER);
         UserResponseDto responseDto = new UserResponseDto(1L, "Luka", "luka@example.com", GlobalRole.USER);
 
-        when(userRepository.findByName(name)).thenReturn(user);
+        when(userRepository.findByUsername(name)).thenReturn(user);
         when(userMapper.toUserResponseDto(user)).thenReturn(responseDto);
 
-        UserResponseDto result = userService.findByName(name);
+        UserResponseDto result = userService.findByUsername(name);
         assertEquals(result, responseDto);
     }
 
     @Test
-    public void findByName_notFound() {
+    public void findByUsername_notFound() {
         String name = "Luka";
 
-        when(userRepository.findByName(name)).thenReturn(null);
+        when(userRepository.findByUsername(name)).thenReturn(null);
 
-        UserNotFoundException ex = assertThrows(UserNotFoundException.class, () -> userService.findByName(name));
+        UserNotFoundException ex = assertThrows(UserNotFoundException.class, () -> userService.findByUsername(name));
 
         assertEquals("User not found with name: " + name, ex.getMessage());
     }
@@ -126,7 +126,7 @@ public class UserServiceTest {
     }
 
     @Test
-    public void findNameLike() {
+    public void findByUsernameLike() {
         String name = "Luka";
         User user1 = new User("Luka", "luka@example.com", "password123", GlobalRole.USER);
         User user2 = new User("Luka_2", "luka_2@example.com", "password123", GlobalRole.USER);
@@ -134,12 +134,12 @@ public class UserServiceTest {
         UserMinimalResponseDto responseDto1 = new UserMinimalResponseDto(1L, "Luka");
         UserMinimalResponseDto responseDto2 = new UserMinimalResponseDto(2L, "Luka_2");
 
-        when(userRepository.findTop5ByNameStartsWithIgnoreCase(name))
+        when(userRepository.findTop5ByUsernameStartsWithIgnoreCase(name))
                 .thenReturn(Arrays.asList(user1, user2));
         when(userMapper.toUserMinimalResponseDto(user1)).thenReturn(responseDto1);
         when(userMapper.toUserMinimalResponseDto(user2)).thenReturn(responseDto2);
 
-        List<UserMinimalResponseDto> result = userService.findByNameLike(name);
+        List<UserMinimalResponseDto> result = userService.findByUsernameLike(name);
 
         assertEquals(2, result.size());
         assertTrue(result.contains(responseDto1));
