@@ -9,6 +9,7 @@ export default function Navbar() {
             <ul>
                 <li><Link to="/">Home</Link></li>
                 <li><Link to="/about">About</Link></li>
+                <li><Link to="/document">Document</Link></li> {/* TODO add id */}
                 <UserSearchBox />
             </ul>
         </nav>

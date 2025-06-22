@@ -1,0 +1,46 @@
+:root {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.documentPage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    background-color: #111111;
+}
+
+.documentPage h1 {
+    margin: 0;
+    padding: 0 1rem;
+    width: 100%;
+
+    white-space: normal;
+    word-break: break-word;
+
+    text-align: center;
+}
+
+.buttons {
+    display: flex;
+    gap: 1rem;
+
+    margin: 1rem 0;
+    margin-bottom: 2rem;
+}
+
+.buttons button {
+    padding: 0.5rem 1rem;
+    background-color: #2b3a48;
+    color: #fff;
+    border: 2px solid transparent;
+    /* Add this */
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.buttons button:hover {
+    border-color: #646cff;
+}

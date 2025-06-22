@@ -1,0 +1,43 @@
+/* reset margins and prevent any overflow-x */
+:root {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+/* A4 size */
+.document {
+    width: 210mm;
+    height: 297mm;
+
+    margin: 20px auto;
+
+    background-color: #000;
+    border: 1px solid #555;
+
+    box-shadow: 0 0 50px rgba(255, 255, 255, 0.06);
+
+    /* flex layout */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+
+    padding: 40px;
+
+    max-width: 100%;
+}
+
+.document p {
+    margin: 0;
+    padding: 0;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.2em;
+    line-height: 1.5;
+    background: none;
+
+    display: block;
+    box-sizing: border-box;
+}

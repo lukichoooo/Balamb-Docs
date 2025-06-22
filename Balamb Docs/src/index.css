@@ -1,3 +1,7 @@
+* {
+  box-sizing: border-box;
+}
+
 :root {
   /* Typography */
   --font-family-base: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -57,7 +61,7 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #3d3d3d;
   cursor: pointer;
   transition: border-color 0.25s;
 
