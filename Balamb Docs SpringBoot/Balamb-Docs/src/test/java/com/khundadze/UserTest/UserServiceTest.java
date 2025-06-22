@@ -1,23 +1,23 @@
 package com.khundadze.UserTest;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
-
-import java.util.Arrays;
-import java.util.List;
-
 import org.mockito.MockitoAnnotations;
 
+import com.khundadze.Balamb_Docs.dtos.UserMinimalResponseDto;
 import com.khundadze.Balamb_Docs.dtos.UserRequestDto;
 import com.khundadze.Balamb_Docs.dtos.UserResponseDto;
 import com.khundadze.Balamb_Docs.exceptions.UserNotFoundException;
+import com.khundadze.Balamb_Docs.models.GlobalRole;
 import com.khundadze.Balamb_Docs.models.User;
 import com.khundadze.Balamb_Docs.repositories.UserRepository;
 import com.khundadze.Balamb_Docs.services.UserMapper;
@@ -42,8 +42,8 @@ public class UserServiceTest {
     @Test
     public void save() {
         UserRequestDto requestDto = new UserRequestDto("Luka", "luka@example.com", "password123");
-        UserResponseDto responseDto = new UserResponseDto(1L, "Luka", "luka@example.com");
-        User user = new User("Luka", "luka@example.com", "password123", "");
+        UserResponseDto responseDto = new UserResponseDto(1L, "Luka", "luka@example.com", GlobalRole.USER);
+        User user = new User("Luka", "luka@example.com", "password123", GlobalRole.USER);
 
         when(userMapper.toUser(requestDto)).thenReturn(user);
         when(userMapper.toUserResponseDto(user)).thenReturn(responseDto);
@@ -56,8 +56,8 @@ public class UserServiceTest {
     @Test
     public void findById() {
         Long id = 1L;
-        User user = new User("Luka", "luka@example.com", "password123", "");
-        UserResponseDto responseDto = new UserResponseDto(1L, "Luka", "luka@example.com");
+        User user = new User("Luka", "luka@example.com", "password123", GlobalRole.USER);
+        UserResponseDto responseDto = new UserResponseDto(1L, "Luka", "luka@example.com", GlobalRole.USER);
 
         when(userRepository.findById(id)).thenReturn(java.util.Optional.of(user));
         when(userMapper.toUserResponseDto(user)).thenReturn(responseDto);
@@ -80,8 +80,8 @@ public class UserServiceTest {
     @Test
     public void findByName() {
         String name = "Luka";
-        User user = new User("Luka", "luka@example.com", "password123", "");
-        UserResponseDto responseDto = new UserResponseDto(1L, "Luka", "luka@example.com");
+        User user = new User("Luka", "luka@example.com", "password123", GlobalRole.USER);
+        UserResponseDto responseDto = new UserResponseDto(1L, "Luka", "luka@example.com", GlobalRole.USER);
 
         when(userRepository.findByName(name)).thenReturn(user);
         when(userMapper.toUserResponseDto(user)).thenReturn(responseDto);
@@ -104,8 +104,8 @@ public class UserServiceTest {
     @Test
     public void findByEmail() {
         String email = "luka@example.com";
-        User user = new User("Luka", "luka@example.com", "password123", "");
-        UserResponseDto responseDto = new UserResponseDto(1L, "Luka", "luka@example.com");
+        User user = new User("Luka", "luka@example.com", "password123", GlobalRole.USER);
+        UserResponseDto responseDto = new UserResponseDto(1L, "Luka", "luka@example.com", GlobalRole.USER);
 
         when(userRepository.findByEmail(email)).thenReturn(user);
         when(userMapper.toUserResponseDto(user)).thenReturn(responseDto);
@@ -128,18 +128,18 @@ public class UserServiceTest {
     @Test
     public void findNameLike() {
         String name = "Luka";
-        User user1 = new User("Luka", "luka@example.com", "password123", "");
-        User user2 = new User("Luka_2", "luka_2@example.com", "password123", "");
+        User user1 = new User("Luka", "luka@example.com", "password123", GlobalRole.USER);
+        User user2 = new User("Luka_2", "luka_2@example.com", "password123", GlobalRole.USER);
 
-        UserResponseDto responseDto1 = new UserResponseDto(1L, "Luka", "luka@example.com");
-        UserResponseDto responseDto2 = new UserResponseDto(2L, "Luka_2", "luka_2@example.com");
+        UserMinimalResponseDto responseDto1 = new UserMinimalResponseDto(1L, "Luka");
+        UserMinimalResponseDto responseDto2 = new UserMinimalResponseDto(2L, "Luka_2");
 
         when(userRepository.findTop5ByNameStartsWithIgnoreCase(name))
                 .thenReturn(Arrays.asList(user1, user2));
-        when(userMapper.toUserResponseDto(user1)).thenReturn(responseDto1);
-        when(userMapper.toUserResponseDto(user2)).thenReturn(responseDto2);
+        when(userMapper.toUserMinimalResponseDto(user1)).thenReturn(responseDto1);
+        when(userMapper.toUserMinimalResponseDto(user2)).thenReturn(responseDto2);
 
-        List<UserResponseDto> result = userService.findByNameLike(name);
+        List<UserMinimalResponseDto> result = userService.findByNameLike(name);
 
         assertEquals(2, result.size());
         assertTrue(result.contains(responseDto1));

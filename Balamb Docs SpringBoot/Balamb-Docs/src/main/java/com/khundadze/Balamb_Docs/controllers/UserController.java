@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.khundadze.Balamb_Docs.dtos.UserMinimalResponseDto;
 import com.khundadze.Balamb_Docs.dtos.UserRequestDto;
 import com.khundadze.Balamb_Docs.dtos.UserResponseDto;
 import com.khundadze.Balamb_Docs.services.UserService;
@@ -41,7 +42,7 @@ public class UserController {
     }
 
     @GetMapping("/findByNameLike/{name}")
-    public List<UserResponseDto> findByNameLike(@PathVariable String name) {
+    public List<UserMinimalResponseDto> findByNameLike(@PathVariable String name) {
         return userService.findByNameLike(name);
     }
 }

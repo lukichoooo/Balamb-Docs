@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.khundadze.Balamb_Docs.dtos.UserMinimalResponseDto;
 import com.khundadze.Balamb_Docs.dtos.UserRequestDto;
 import com.khundadze.Balamb_Docs.dtos.UserResponseDto;
 import com.khundadze.Balamb_Docs.exceptions.UserNotFoundException;
@@ -34,13 +35,13 @@ public class UserService {
         return userMapper.toUserResponseDto(user);
     }
 
-    public List<UserResponseDto> findByNameLike(String name) {
+    public List<UserMinimalResponseDto> findByNameLike(String name) {
         List<User> users = userRepository.findTop5ByNameStartsWithIgnoreCase(name);
         if (users.isEmpty()) {
             throw new UserNotFoundException("User not found with name: " + name);
         }
         return users.stream()
-                .map(userMapper::toUserResponseDto)
+                .map(userMapper::toUserMinimalResponseDto)
                 .toList();
     }
 
