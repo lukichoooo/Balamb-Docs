@@ -1,0 +1,35 @@
+.browseDocumentsPage {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+
+    background-color: #111111;
+
+    padding: 2rem;
+    gap: 1rem;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    justify-self: center;
+    margin-top: 2rem;
+}
+
+.pagination button {
+    margin: 0 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: rebeccapurple;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+
+    cursor: pointer;
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

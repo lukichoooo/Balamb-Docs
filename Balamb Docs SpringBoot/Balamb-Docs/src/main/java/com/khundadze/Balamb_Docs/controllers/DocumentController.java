@@ -42,4 +42,9 @@ public class DocumentController {
     public List<DocumentMinimalResponseDto> findByNameLike(@PathVariable("name") String name) {
         return documentService.findByNameLike(name);
     }
+
+    @GetMapping("/getPage/{pageNumber}")
+    public List<DocumentResponseDto> findAll(@PathVariable("pageNumber") int pageNumber) {
+        return documentService.getPage(pageNumber);
+    }
 }

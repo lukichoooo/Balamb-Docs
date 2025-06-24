@@ -14,18 +14,18 @@ public class DocumentMapper {
         return new DocumentMinimalResponseDto(document.getId(), document.getName());
     }
 
+    public DocumentResponseDto toDocumentResponseDto(Document document) {
+        return new DocumentResponseDto(document.getId(),
+                document.getName(),
+                document.getDescription(),
+                document.getContent());
+    }
+
     public Document toDocument(DocumentRequestDto requestDto) {
         Document document = new Document();
         document.setName(requestDto.name());
         document.setDescription(requestDto.description());
         document.setContent(requestDto.content());
         return document;
-    }
-
-    public DocumentResponseDto toDocumentResponseDto(Document document) {
-        return new DocumentResponseDto(document.getId(),
-                document.getName(),
-                document.getDescription(),
-                document.getContent());
     }
 }

@@ -2,6 +2,8 @@ package com.khundadze.Balamb_Docs.services;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.khundadze.Balamb_Docs.dtos.DocumentMinimalResponseDto;
@@ -49,6 +51,14 @@ public class DocumentService {
 
         return documents.stream()
                 .map(mapper::toDocumentMinimalResponseDto)
+                .toList();
+    }
+
+    public List<DocumentResponseDto> getPage(int pageNumber) {
+        Page<Document> page = repo.findAll(PageRequest.of(pageNumber, 12));
+
+        return page.getContent().stream()
+                .map(mapper::toDocumentResponseDto)
                 .toList();
     }
 }

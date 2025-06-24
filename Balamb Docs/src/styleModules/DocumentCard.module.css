@@ -1,0 +1,26 @@
+.card {
+    background-color: blueviolet;
+    border: 1px solid #ccc;
+    color: white;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 12px;
+    width: 300px;
+    height: 450px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transition: box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+.card img {
+    width: 70%;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 12px;
+}
+
+.card:hover {
+    cursor: pointer;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px);
+}

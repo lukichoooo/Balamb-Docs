@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "../styleModules/UserSearchBox.module.css";
-import type { User } from "../types";
+import type { DocumentMinimalDto as Document } from "../types";
 
-export default function UserSearchBox() {
+export default function DocumentSearchBox() {
     const [searchInput, setSearchInput] = useState("");
-    const [searchResult, setSearchResult] = useState<User[]>([]);
+    const [searchResult, setSearchResult] = useState<Document[]>([]);
     const [showResults, setShowResults] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -30,9 +30,9 @@ export default function UserSearchBox() {
             return;
         }
 
-        fetch(`http://localhost:8080/api/users/findByUsernameLike/${searchInput}`)
+        fetch(`http://localhost:8080/api/documents/findByNameLike/${searchInput}`)
             .then(res => res.json())
-            .then((data: User[]) => setSearchResult(data))
+            .then((data: Document[]) => setSearchResult(data))
             .catch(() => setSearchResult([]));
     }, [searchInput]);
 
@@ -50,7 +50,7 @@ export default function UserSearchBox() {
                 <ul className={styles.dropdown}>
                     {searchResult.map(user => (
                         <li key={user.id} className={styles.item}>
-                            {user.username}
+                            {user.name}
                         </li>
                     ))}
                 </ul>
