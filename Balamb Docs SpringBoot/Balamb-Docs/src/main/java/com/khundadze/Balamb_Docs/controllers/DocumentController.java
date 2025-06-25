@@ -44,7 +44,7 @@ public class DocumentController {
     }
 
     @GetMapping("/getPage/{pageNumber}")
-    public List<DocumentResponseDto> findAll(@PathVariable("pageNumber") int pageNumber) {
+    public List<DocumentResponseDto> getPage(@PathVariable("pageNumber") int pageNumber) {
         return documentService.getPage(pageNumber);
     }
 }
