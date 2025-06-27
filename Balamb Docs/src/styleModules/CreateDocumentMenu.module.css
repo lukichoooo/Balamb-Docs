@@ -1,0 +1,72 @@
+.createDocumentMenu {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background-color: #333;
+    color: #fff;
+
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+
+    width: 400px;
+    z-index: 100;
+}
+
+.createDocumentMenu h2 {
+    margin-top: 0;
+}
+
+.createDocumentMenu form {
+    display: flex;
+    flex-direction: column;
+}
+
+.createDocumentMenu label {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9rem;
+}
+
+.createDocumentMenu input,
+.createDocumentMenu textarea {
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.createDocumentMenu button {
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: #007BFF;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.createDocumentMenu button:hover {
+    background-color: #0056b3;
+}
+
+.closeButton {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.25rem;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 0.25rem;
+    line-height: 1;
+    transition: color 0.2s ease;
+}

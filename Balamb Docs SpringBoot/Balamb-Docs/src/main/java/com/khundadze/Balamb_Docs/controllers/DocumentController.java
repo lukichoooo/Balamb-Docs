@@ -2,9 +2,12 @@ package com.khundadze.Balamb_Docs.controllers;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,6 +15,8 @@ import com.khundadze.Balamb_Docs.dtos.DocumentMinimalResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentRequestDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentResponseDto;
 import com.khundadze.Balamb_Docs.services.DocumentService;
+
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/documents")
@@ -24,7 +29,7 @@ public class DocumentController {
     }
 
     @PostMapping("/save")
-    public DocumentResponseDto save(DocumentRequestDto requestDocument) {
+    public DocumentResponseDto save(@Valid @RequestBody DocumentRequestDto requestDocument) {
         return documentService.save(requestDocument);
     }
 
@@ -46,5 +51,16 @@ public class DocumentController {
     @GetMapping("/getPage/{pageNumber}")
     public List<DocumentResponseDto> getPage(@PathVariable("pageNumber") int pageNumber) {
         return documentService.getPage(pageNumber);
+    }
+
+    @DeleteMapping("/deleteById/{id}")
+    public void deleteById(@PathVariable("id") Long id) {
+        documentService.deleteById(id);
+    }
+
+    @PutMapping("/updateContentById/{id}")
+    public DocumentResponseDto updateContentById(@PathVariable("id") Long id,
+            @RequestBody String requestDocument) {
+        return documentService.updateContentById(id, requestDocument);
     }
 }

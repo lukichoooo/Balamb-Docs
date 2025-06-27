@@ -61,4 +61,13 @@ public class DocumentService {
                 .map(mapper::toDocumentResponseDto)
                 .toList();
     }
+
+    public void deleteById(Long id) {
+        repo.deleteById(id);
+    }
+
+    public DocumentResponseDto updateContentById(Long id, String content) {
+        repo.updateContentById(id, content);
+        return findById(id);
+    }
 }

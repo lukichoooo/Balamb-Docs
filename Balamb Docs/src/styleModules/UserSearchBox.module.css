@@ -30,6 +30,9 @@
     border-radius: 0 0 4px 4px;
 
     position: absolute;
+
+    z-index: 110;
+
 }
 
 .item {

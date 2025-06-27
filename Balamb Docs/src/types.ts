@@ -21,3 +21,9 @@ export type Document = {
     description: string;
     content: string;
 }
+
+export type DocumentRequestDto = {
+    name: string;
+    description: string;
+    content: string;
+}

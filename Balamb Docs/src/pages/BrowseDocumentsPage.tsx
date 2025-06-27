@@ -4,6 +4,7 @@ import type { DocumentDto as Document } from "../types";
 import { Link } from "react-router-dom";
 import styles from "../styleModules/BrowseDocumentsPage.module.css";
 import DocumentSearchBox from "../components/DocumentSearchBox";
+import CreateDocumentButton from "../components/CreateDocumentButton";
 
 export default function BrowseDocumentsPage() {
 
@@ -25,6 +26,7 @@ export default function BrowseDocumentsPage() {
     return (
         <>
             < DocumentSearchBox />
+            < CreateDocumentButton />
             <div className={styles.browseDocumentsPage}>
                 {documents.map(dto => (
                     <Link key={dto.id} to={`/documents/${dto.id}`}>
