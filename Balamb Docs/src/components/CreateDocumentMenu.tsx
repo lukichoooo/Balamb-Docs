@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import styles from "../styleModules/CreateDocumentMenu.module.css";
 import type { DocumentRequestDto } from "../types";
+import { saveDocument } from "../services/api";
 
 export default function CreateDocumentMenu({ onClose }: { onClose: () => void }) {
     const formRef = useRef<HTMLFormElement>(null);
@@ -15,12 +16,7 @@ export default function CreateDocumentMenu({ onClose }: { onClose: () => void })
             content: formData.get("content") as string,
         };
 
-        fetch("http://localhost:8080/api/documents/save", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data),
-        })
-            .then((res) => res.json())
+        saveDocument(data)
             .then(() => onClose())
             .catch((err) => console.error(err));
     }

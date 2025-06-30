@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import styles from "../styleModules/DocumentCard.module.css"
-import type { DocumentDto } from "../types"
+import type { DocumentResponseDto } from "../types"
 
-export default function DocumentCard(dto: DocumentDto) {
+export default function DocumentCard(dto: DocumentResponseDto) {
 
     return (
         <Link to={`/documents/${dto.id}`}>

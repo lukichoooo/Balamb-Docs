@@ -60,7 +60,7 @@ public class DocumentController {
 
     @PutMapping("/updateContentById/{id}")
     public DocumentResponseDto updateContentById(@PathVariable("id") Long id,
-            @RequestBody String requestDocument) {
-        return documentService.updateContentById(id, requestDocument);
+            @RequestBody String content) {
+        return documentService.updateContentById(id, content);
     }
 }

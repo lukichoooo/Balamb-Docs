@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "../styleModules/UserSearchBox.module.css";
-import type { DocumentMinimalDto as Document } from "../types";
+import type { DocumentMinimalResponseDto } from "../types";
+import { fetchDocumentsByNameLike } from "../services/api";
 
 export default function DocumentSearchBox() {
     const [searchInput, setSearchInput] = useState("");
-    const [searchResult, setSearchResult] = useState<Document[]>([]);
+    const [searchResult, setSearchResult] = useState<DocumentMinimalResponseDto[]>([]);
     const [showResults, setShowResults] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -30,9 +31,8 @@ export default function DocumentSearchBox() {
             return;
         }
 
-        fetch(`http://localhost:8080/api/documents/findByNameLike/${searchInput}`)
-            .then(res => res.json())
-            .then((data: Document[]) => setSearchResult(data))
+        fetchDocumentsByNameLike(searchInput)
+            .then((data: DocumentMinimalResponseDto[]) => setSearchResult(data))
             .catch(() => setSearchResult([]));
     }, [searchInput]);
 

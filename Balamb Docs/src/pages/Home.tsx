@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom"
+import { fetchWelcomeText } from "../services/api";
 
 export default function Home() {
 
     const [welcomeText, setWelcomeText] = useState("");
 
     useEffect(() => {
-        fetch("http://localhost:8080/api/home/welcomeText")
-            .then(res => res.text())
-            .then(data => setWelcomeText(data))
-            .catch(() => setWelcomeText("Failed to load"));
+        fetchWelcomeText()
+            .then(setWelcomeText)
+            .catch(() => setWelcomeText("Failed to fetch welcome text"));
     }, []);
 
     return (

@@ -4,18 +4,12 @@ export type User = {
     email: string;
 };
 
-export type DocumentMinimalDto = {
+export type DocumentMinimalResponseDto = {
     id: number;
     name: string;
 }
 
-export type DocumentDto = {
-    id: number;
-    name: string;
-    description: string;
-}
-
-export type Document = {
+export type DocumentResponseDto = {
     id: number;
     name: string;
     description: string;

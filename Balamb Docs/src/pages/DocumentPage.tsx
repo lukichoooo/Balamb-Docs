@@ -1,14 +1,17 @@
 import styles from "../styleModules/DocumentPage.module.css"
 import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react"
-import type { Document as DocumentType } from "../types"
+import type { DocumentResponseDto } from "../types"
 import Document from "../components/Document";
+import { fetchDocumentsByid } from "../services/api";
+import { updateContentById } from "../services/api";
+import { deleteDocumentById } from "../services/api"
 
 export default function DocumentPage() {
     const params = useParams();
     const id = Number(params.id);
 
-    const [document, setDocument] = useState<DocumentType>({
+    const [document, setDocument] = useState<DocumentResponseDto>({
         id: 0,
         name: "Untitled Document",
         description: "Default description",
@@ -20,9 +23,8 @@ export default function DocumentPage() {
 
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/documents/findById/${id}`)
-            .then(res => res.json())
-            .then((data: DocumentType) => setDocument(data))
+        fetchDocumentsByid(id)
+            .then((data: DocumentResponseDto) => setDocument(data))
             .catch(() => setDocument({
                 id: -1,
                 name: "Error",
@@ -32,20 +34,13 @@ export default function DocumentPage() {
     }, [id]);
 
     function handleContentChange(value: string) {
-        setDocument(prev => ({ ...prev, content: value }));
+        setDocument((prev: DocumentResponseDto) => ({ ...prev, content: value }));
     }
 
     function handleSave() {
-        fetch(`http://localhost:8080/api/documents/updateContentById/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(document.content)  // just the content string!
-        })
-            .then(res => {
-                if (!res.ok) throw new Error("Save failed");
-                return res.text(); // or .json() if you return something
-            })
+        updateContentById(id, document.content)
             .then(() => {
+                alert("Changes saved successfully");
                 setIsEditing(false);
             })
             .catch(err => {
@@ -56,18 +51,10 @@ export default function DocumentPage() {
 
 
     function handleDelete() {
-        fetch(`http://localhost:8080/api/documents/deleteById/${id}`, {
-            method: 'DELETE'
-        })
-            .then(res => {
-                if (!res.ok) throw new Error("Delete failed");
-                // Some backends return an empty body for DELETE; adjust if needed:
-                return res.text();
-            })
+        deleteDocumentById(id)
             .then(() => {
                 setDocument({ id: -1, name: "", description: "", content: "" });
                 setIsEditing(false);
-                // Navigate to /documents:
                 navigate("/documents");
             })
             .catch(err => console.error(err));

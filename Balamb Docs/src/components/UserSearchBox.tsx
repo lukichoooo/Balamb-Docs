@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "../styleModules/UserSearchBox.module.css";
 import type { User } from "../types";
+import { findByUsernameLike } from "../services/api";
 
 export default function UserSearchBox() {
     const [searchInput, setSearchInput] = useState("");
@@ -29,9 +30,7 @@ export default function UserSearchBox() {
             setSearchResult([]);
             return;
         }
-
-        fetch(`http://localhost:8080/api/users/findByUsernameLike/${searchInput}`)
-            .then(res => res.json())
+        findByUsernameLike(searchInput)
             .then((data: User[]) => setSearchResult(data))
             .catch(() => setSearchResult([]));
     }, [searchInput]);
