@@ -14,7 +14,7 @@ import com.khundadze.Balamb_Docs.models.Document;
 
 import jakarta.transaction.Transactional;
 
-public interface DocumentRepository extends JpaRepository<Document, Long> {
+public interface IDocumentRepository extends JpaRepository<Document, Long> {
 
     Optional<Document> findByName(String name);
 

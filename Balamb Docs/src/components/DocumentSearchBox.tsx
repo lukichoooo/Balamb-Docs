@@ -30,10 +30,16 @@ export default function DocumentSearchBox() {
             setSearchResult([]);
             return;
         }
+        const interval = setTimeout(() => {
+            fetchDocumentsByNameLike(searchInput)
+                .then((data: DocumentMinimalResponseDto[]) => setSearchResult(data))
+                .catch(() => setSearchResult([]));
+        }, 500);
 
-        fetchDocumentsByNameLike(searchInput)
-            .then((data: DocumentMinimalResponseDto[]) => setSearchResult(data))
-            .catch(() => setSearchResult([]));
+        return () => {
+            clearTimeout(interval);
+        }
+
     }, [searchInput]);
 
     return (

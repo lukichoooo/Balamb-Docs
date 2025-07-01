@@ -18,7 +18,7 @@ import com.khundadze.Balamb_Docs.dtos.DocumentRequestDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentResponseDto;
 import com.khundadze.Balamb_Docs.exceptions.DocumentNotFoundException;
 import com.khundadze.Balamb_Docs.models.Document;
-import com.khundadze.Balamb_Docs.repositories.DocumentRepository;
+import com.khundadze.Balamb_Docs.repositories.IDocumentRepository;
 import com.khundadze.Balamb_Docs.services.DocumentMapper;
 import com.khundadze.Balamb_Docs.services.DocumentService;
 
@@ -31,7 +31,7 @@ public class DocumentServiceTest {
     DocumentMapper mapper;
 
     @Mock
-    DocumentRepository repo;
+    IDocumentRepository repo;
 
     @BeforeEach
     public void setUp() {

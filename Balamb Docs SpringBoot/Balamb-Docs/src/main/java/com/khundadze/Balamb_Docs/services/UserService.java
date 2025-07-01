@@ -9,15 +9,15 @@ import com.khundadze.Balamb_Docs.dtos.UserRequestDto;
 import com.khundadze.Balamb_Docs.dtos.UserResponseDto;
 import com.khundadze.Balamb_Docs.exceptions.UserNotFoundException;
 import com.khundadze.Balamb_Docs.models.User;
-import com.khundadze.Balamb_Docs.repositories.UserRepository;
+import com.khundadze.Balamb_Docs.repositories.IUserRepository;
 
 @Service
 public class UserService {
-    private final UserRepository userRepository;
+    private final IUserRepository userRepository;
 
     private final UserMapper userMapper;
 
-    public UserService(UserRepository userRepository, UserMapper userMapper) {
+    public UserService(IUserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
         this.userMapper = userMapper;
     }

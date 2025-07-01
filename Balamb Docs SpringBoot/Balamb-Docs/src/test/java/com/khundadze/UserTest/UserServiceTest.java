@@ -19,7 +19,7 @@ import com.khundadze.Balamb_Docs.dtos.UserResponseDto;
 import com.khundadze.Balamb_Docs.exceptions.UserNotFoundException;
 import com.khundadze.Balamb_Docs.models.GlobalRole;
 import com.khundadze.Balamb_Docs.models.User;
-import com.khundadze.Balamb_Docs.repositories.UserRepository;
+import com.khundadze.Balamb_Docs.repositories.IUserRepository;
 import com.khundadze.Balamb_Docs.services.UserMapper;
 import com.khundadze.Balamb_Docs.services.UserService;
 
@@ -29,7 +29,7 @@ public class UserServiceTest {
     private UserService userService;
 
     @Mock
-    private UserRepository userRepository;
+    private IUserRepository userRepository;
 
     @Mock
     private UserMapper userMapper;

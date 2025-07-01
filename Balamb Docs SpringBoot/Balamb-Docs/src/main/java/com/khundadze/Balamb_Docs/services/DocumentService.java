@@ -11,15 +11,15 @@ import com.khundadze.Balamb_Docs.dtos.DocumentRequestDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentResponseDto;
 import com.khundadze.Balamb_Docs.exceptions.DocumentNotFoundException;
 import com.khundadze.Balamb_Docs.models.Document;
-import com.khundadze.Balamb_Docs.repositories.DocumentRepository;
+import com.khundadze.Balamb_Docs.repositories.IDocumentRepository;
 
 @Service
 public class DocumentService {
 
     DocumentMapper mapper;
-    DocumentRepository repo;
+    IDocumentRepository repo;
 
-    public DocumentService(DocumentMapper mapper, DocumentRepository repo) {
+    public DocumentService(DocumentMapper mapper, IDocumentRepository repo) {
         this.mapper = mapper;
         this.repo = repo;
     }

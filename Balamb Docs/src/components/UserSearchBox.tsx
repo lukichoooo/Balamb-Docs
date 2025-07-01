@@ -30,10 +30,19 @@ export default function UserSearchBox() {
             setSearchResult([]);
             return;
         }
-        findByUsernameLike(searchInput)
-            .then((data: User[]) => setSearchResult(data))
-            .catch(() => setSearchResult([]));
+
+        const interval = setTimeout(() => {
+            findByUsernameLike(searchInput)
+                .then((data: User[]) => setSearchResult(data))
+                .catch(() => setSearchResult([]));
+        }, 500); // 500ms delay (adjust as you like)
+
+        // Cleanup if searchInput changes before the delay finishes
+        return () => {
+            clearTimeout(interval);
+        };
     }, [searchInput]);
+
 
     return (
         <div className={styles.searchContainer} ref={containerRef}>
