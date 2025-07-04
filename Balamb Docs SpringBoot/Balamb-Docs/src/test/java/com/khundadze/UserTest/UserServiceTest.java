@@ -2,6 +2,7 @@ package com.khundadze.UserTest;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -70,7 +71,7 @@ public class UserServiceTest {
     public void findById_notFound() {
         Long id = 1L;
 
-        when(userRepository.findById(id)).thenReturn(java.util.Optional.empty());
+        when(userRepository.findById(id)).thenReturn(Optional.empty());
 
         UserNotFoundException ex = assertThrows(UserNotFoundException.class, () -> userService.findById(id));
 
@@ -83,7 +84,7 @@ public class UserServiceTest {
         User user = new User("Luka", "luka@example.com", "password123", GlobalRole.USER);
         UserResponseDto responseDto = new UserResponseDto(1L, "Luka", "luka@example.com", GlobalRole.USER);
 
-        when(userRepository.findByUsername(name)).thenReturn(user);
+        when(userRepository.findByUsername(name)).thenReturn(Optional.of(user));
         when(userMapper.toUserResponseDto(user)).thenReturn(responseDto);
 
         UserResponseDto result = userService.findByUsername(name);
@@ -94,7 +95,7 @@ public class UserServiceTest {
     public void findByUsername_notFound() {
         String name = "Luka";
 
-        when(userRepository.findByUsername(name)).thenReturn(null);
+        when(userRepository.findByUsername(name)).thenReturn(Optional.empty());
 
         UserNotFoundException ex = assertThrows(UserNotFoundException.class, () -> userService.findByUsername(name));
 
@@ -107,7 +108,7 @@ public class UserServiceTest {
         User user = new User("Luka", "luka@example.com", "password123", GlobalRole.USER);
         UserResponseDto responseDto = new UserResponseDto(1L, "Luka", "luka@example.com", GlobalRole.USER);
 
-        when(userRepository.findByEmail(email)).thenReturn(user);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         when(userMapper.toUserResponseDto(user)).thenReturn(responseDto);
 
         UserResponseDto result = userService.findByEmail(email);
@@ -118,7 +119,7 @@ public class UserServiceTest {
     public void findByEmail_notFound() {
         String email = "luka@example.com";
 
-        when(userRepository.findByEmail(email)).thenReturn(null);
+        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
         UserNotFoundException ex = assertThrows(UserNotFoundException.class, () -> userService.findByEmail(email));
 

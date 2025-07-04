@@ -2,6 +2,8 @@ package com.khundadze.Balamb_Docs.services;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.khundadze.Balamb_Docs.dtos.UserMinimalResponseDto;
@@ -22,16 +24,20 @@ public class UserService {
         this.userMapper = userMapper;
     }
 
+    @Autowired
+    private PasswordEncoder passwordEncoder; // TODO: remove
+
     public UserResponseDto save(UserRequestDto requestUser) {
         User user = userMapper.toUser(requestUser);
+
+        user.setPassword(passwordEncoder.encode(requestUser.password())); // TODO: remove
+
         return userMapper.toUserResponseDto(userRepository.save(user));
     }
 
     public UserResponseDto findByUsername(String name) {
-        User user = userRepository.findByUsername(name);
-        if (user == null) {
-            throw new UserNotFoundException("User not found with name: " + name);
-        }
+        User user = userRepository.findByUsername(name)
+                .orElseThrow(() -> new UserNotFoundException("User not found with name: " + name));
         return userMapper.toUserResponseDto(user);
     }
 
@@ -46,10 +52,8 @@ public class UserService {
     }
 
     public UserResponseDto findByEmail(String email) {
-        User user = userRepository.findByEmail(email);
-        if (user == null) {
-            throw new UserNotFoundException("User not found with email: " + email);
-        }
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
         return userMapper.toUserResponseDto(user);
     }
 

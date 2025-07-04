@@ -34,15 +34,23 @@ public class AuthService {
         return AuthenticationResponse.builder().token(JwtToken).build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        request.getEmail(),
-                        request.getPassword()));
-        var user = userRepository.findByEmail(request.getEmail());
-        if (user == null)
-            throw new UserNotFoundException("User not found with email: " + request.getEmail());
+    public AuthenticationResponse login(LoginRequest request) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(),
+                            request.getPassword()));
+        } catch (Exception e) {
+            // You can throw a custom exception or return a specific response
+            throw new RuntimeException("Invalid username or password");
+        }
+
+        var userOptional = userRepository.findByUsername(request.getUsername());
+        if (userOptional.isEmpty())
+            throw new UserNotFoundException("User not found with username: " + request.getUsername());
+        var user = userOptional.get();
         var JwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder().token(JwtToken).build();
     }
+
 }

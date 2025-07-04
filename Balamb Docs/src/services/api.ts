@@ -1,61 +1,45 @@
-// src/services/api.js
-
+// src/services/api.ts (or api.js)
+import axiosInstance from "./axiosInstance";
 import type { DocumentResponseDto, DocumentMinimalResponseDto, DocumentRequestDto } from "../types";
 import type { User } from "../types";
 
 export async function fetchWelcomeText() {
-    const res = await fetch("http://localhost:8080/api/home/welcomeText");
-    if (!res.ok) throw new Error("Failed to fetch");
-    return res.text();
+    const res = await axiosInstance.get("/home/welcomeText");
+    return res.data;
 }
 
 export async function fetchDocumentsByid(id: number): Promise<DocumentResponseDto> {
-    const res = await fetch(`http://localhost:8080/api/documents/findById/${id}`);
-    if (!res.ok) throw new Error("Failed to fetch");
-    return res.json();
+    const res = await axiosInstance.get(`/documents/findById/${id}`);
+    return res.data;
 }
 
 export async function updateContentById(id: number, content: string): Promise<DocumentResponseDto> {
-    const res = await fetch(`http://localhost:8080/api/documents/updateContentById/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: content // wrap in an object!
+    const res = await axiosInstance.put(`/documents/updateContentById/${id}`, content, {
+        headers: { "Content-Type": "text/plain" }
     });
-    if (!res.ok) throw new Error("Failed to update document");
-    return res.json();
+    return res.data;
 }
 
 export async function deleteDocumentById(id: number): Promise<void> {
-    const res = await fetch(`http://localhost:8080/api/documents/deleteById/${id}`, {
-        method: 'DELETE'
-    });
-    if (!res.ok) throw new Error("Delete failed");
+    await axiosInstance.delete(`/documents/deleteById/${id}`);
 }
 
 export async function fetchDocumentsPage(page: number): Promise<DocumentResponseDto[]> {
-    const res = await fetch(`http://localhost:8080/api/documents/getPage/${page}`);
-    if (!res.ok) throw new Error("Failed to fetch documents page");
-    return res.json();
+    const res = await axiosInstance.get(`/documents/getPage/${page}`);
+    return res.data;
 }
 
-export async function fetchDocumentsByNameLike(name: string): Promise<DocumentMinimalResponseDto[]> { // good
-    const res = await fetch(`http://localhost:8080/api/documents/findByNameLike/${name}`);
-    if (!res.ok) throw new Error("Failed to fetch documents by name");
-    return res.json();
+export async function fetchDocumentsByNameLike(name: string): Promise<DocumentMinimalResponseDto[]> {
+    const res = await axiosInstance.get(`/documents/findByNameLike/${name}`);
+    return res.data;
 }
 
-export async function findByUsernameLike(username: String): Promise<User[]> {
-    const res = await fetch(`http://localhost:8080/api/users/findByUsernameLike/${username}`)
-    if (!res.ok) throw new Error("Failed to fetch Users by name");
-    return res.json();
+export async function findByUsernameLike(username: string): Promise<User[]> {
+    const res = await axiosInstance.get(`/users/findByUsernameLike/${username}`);
+    return res.data;
 }
 
 export async function saveDocument(document: DocumentRequestDto): Promise<DocumentResponseDto> {
-    const res = await fetch("http://localhost:8080/api/documents/save", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(document),
-    })
-    if (!res.ok) throw new Error("Failed to save document");
-    return res.json();
+    const res = await axiosInstance.post("/documents/save", document);
+    return res.data;
 }

@@ -1,6 +1,7 @@
 package com.khundadze.Balamb_Docs.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -8,9 +9,9 @@ import com.khundadze.Balamb_Docs.models.User;
 
 public interface IUserRepository extends JpaRepository<User, Long> {
 
-    public User findByEmail(String email);
+    public Optional<User> findByEmail(String email);
 
-    public User findByUsername(String name);
+    public Optional<User> findByUsername(String name);
 
     List<User> findTop5ByUsernameStartsWithIgnoreCase(String name);
 

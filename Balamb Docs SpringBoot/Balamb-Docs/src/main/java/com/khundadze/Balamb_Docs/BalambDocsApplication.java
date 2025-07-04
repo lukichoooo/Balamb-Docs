@@ -28,7 +28,7 @@ public class BalambDocsApplication implements CommandLineRunner {
 	public void run(String... args) throws Exception {
 		Faker faker = new Faker();
 
-		for (int i = 1; i <= 50; i++) {
+		for (int i = 1; i <= 20; i++) {
 			UserRequestDto userRequestDto = new UserRequestDto(
 					faker.name().firstName(),
 					faker.internet().emailAddress(),
@@ -49,5 +49,11 @@ public class BalambDocsApplication implements CommandLineRunner {
 			userService.save(userRequestDto); // save to DB
 			documentService.save(documentRequestDto);
 		}
+
+		UserRequestDto userRequestDto = new UserRequestDto(
+				"lukacho",
+				"xundadze@gmail.com",
+				"luka12345");
+		userService.save(userRequestDto);
 	}
 }

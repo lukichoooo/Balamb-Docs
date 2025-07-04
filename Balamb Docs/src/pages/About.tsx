@@ -10,7 +10,7 @@ export default function About() {
             <p>
                 {paragraphText}
             </p>
-            <Link to="/">
+            <Link to="/home">
                 <button>Home</button>
             </Link>
         </>
