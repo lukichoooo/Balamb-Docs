@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const API_BASE_URL = "http://localhost:8080/api/v1/auth";
 
-type LoginResponse = {
+type AuthResponse = {
     token: string;
 };
 
@@ -19,12 +19,12 @@ type RegisterRequest = {
 
 
 const AuthService = {
-    async login(credentials: LoginRequest): Promise<LoginResponse> {
+    async login(credentials: LoginRequest): Promise<AuthResponse> {
         const response = await axios.post(`${API_BASE_URL}/login`, credentials);
         return response.data;
     },
 
-    async register(credentials: RegisterRequest): Promise<LoginResponse> {
+    async register(credentials: RegisterRequest): Promise<AuthResponse> {
         const response = await axios.post(`${API_BASE_URL}/register`, credentials);
         return response.data;
     },

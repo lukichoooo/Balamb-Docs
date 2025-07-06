@@ -1,39 +1,37 @@
-import { useState, useContext } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import AuthService from '../services/AuthService';
 import styles from '../styleModules/AuthPage.module.css';
-import { AuthContext } from '../auth/AuthContext.tsx';
 
-const LoginPage = () => {
+const RegisterPage = () => {
     const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
-    const { setIsLoggedIn } = useContext(AuthContext);
     const navigate = useNavigate();
 
-    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const response = await AuthService.login({ username, password });
-            if (response.token !== 'Invalid credentials') {
-                localStorage.setItem('token', response.token);
-                setIsLoggedIn(true);
-                navigate('/dashboard');
+            const response = await AuthService.register({ username, email, password });
+            if (response) {
+                setMessage('Registration successful! You can now log in.');
+                navigate('/login');
             } else {
-                setMessage('Invalid credentials');
+                setMessage('Registration failed');
             }
         } catch (error) {
-            setMessage('Invalid credentials');
+            setMessage('Registration failed');
         }
     };
 
     return (
         <div className={styles.container}>
             <div className={styles.card}>
-                <div className={styles['card-header']}>Login Form</div>
+                <div className={styles['card-header']}>Register</div>
                 <div className={styles['card-body']}>
                     {message && <div className={styles.alert}>{message}</div>}
-                    <form onSubmit={handleLogin}>
+                    <form onSubmit={handleRegister}>
                         <div className={styles['form-group']}>
                             <label>Username</label>
                             <input
@@ -41,6 +39,17 @@ const LoginPage = () => {
                                 className={styles['form-control']}
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
+                                required
+                            />
+                        </div>
+                        <div className={styles['form-group']}>
+                            <label>Email</label>
+                            <input
+                                type="email"
+                                className={styles['form-control']}
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                required
                             />
                         </div>
                         <div className={styles['form-group']}>
@@ -50,23 +59,23 @@ const LoginPage = () => {
                                 className={styles['form-control']}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
+                                required
                             />
                         </div>
-                        <button type="submit" className={styles['btn-primary']}>Login</button>
+                        <button type="submit" className={styles['btn-primary']}>Register</button>
                     </form>
                     <div className={styles['mt-3']}>
                         <span>
-                            Not registered?{" "}
-                            <Link to="/register" className={styles.link}>
-                                Register here
+                            Already have an account?{" "}
+                            <Link to="/login" className={styles.link}>
+                                Login here
                             </Link>
                         </span>
                     </div>
                 </div>
             </div>
         </div>
-
     );
 };
 
-export default LoginPage;
+export default RegisterPage;
