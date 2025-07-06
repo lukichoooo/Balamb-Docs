@@ -48,6 +48,7 @@ public class BalambDocsApplication implements CommandLineRunner {
 
 			userService.save(userRequestDto); // save to DB
 			documentService.save(documentRequestDto);
+			documentService.save(documentRequestDto);
 		}
 
 		UserRequestDto userRequestDto = new UserRequestDto(

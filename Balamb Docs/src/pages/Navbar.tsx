@@ -1,6 +1,7 @@
 import styles from "../styleModules/Navbar.module.css";
 import { Link } from "react-router-dom";
 import UserSearchBox from "../components/UserSearchBox";
+import LogoutButton from "../auth/LogoutButton";
 
 export default function Navbar() {
 
@@ -12,6 +13,7 @@ export default function Navbar() {
                 <li><Link to="/documents">Documents</Link></li> {/* TODO add id */}
                 <UserSearchBox />
             </ul>
+            <LogoutButton />
         </nav>
     );
 }

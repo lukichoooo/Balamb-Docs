@@ -21,14 +21,17 @@ type RegisterRequest = {
 const AuthService = {
     async login(credentials: LoginRequest): Promise<LoginResponse> {
         const response = await axios.post(`${API_BASE_URL}/login`, credentials);
-        return response.data; // returns LoginResponse { token }
+        return response.data;
     },
 
     async register(credentials: RegisterRequest): Promise<LoginResponse> {
         const response = await axios.post(`${API_BASE_URL}/register`, credentials);
         return response.data;
+    },
+
+    logout() {
+        localStorage.removeItem("token");
     }
 };
-
 
 export default AuthService;

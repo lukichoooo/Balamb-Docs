@@ -25,3 +25,14 @@
     transition: color 0.3s ease;
     font-size: 1.5em;
 }
+
+.nav button {
+    background-color: red;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    position: absolute;
+    right: 20px;
+}
