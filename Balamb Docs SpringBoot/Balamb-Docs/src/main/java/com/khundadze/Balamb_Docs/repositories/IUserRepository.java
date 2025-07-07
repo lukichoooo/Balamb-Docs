@@ -9,8 +9,6 @@ import com.khundadze.Balamb_Docs.models.User;
 
 public interface IUserRepository extends JpaRepository<User, Long> {
 
-    public Optional<User> findByEmail(String email);
-
     public Optional<User> findByUsername(String name);
 
     List<User> findTop5ByUsernameStartsWithIgnoreCase(String name);

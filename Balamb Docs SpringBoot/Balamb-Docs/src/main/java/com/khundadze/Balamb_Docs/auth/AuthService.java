@@ -25,7 +25,6 @@ public class AuthService {
     public AuthenticationResponse register(RegisterRequest request) {
         User user = User.builder()
                 .username(request.getUsername())
-                .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .globalRole(GlobalRole.USER)
                 .build();

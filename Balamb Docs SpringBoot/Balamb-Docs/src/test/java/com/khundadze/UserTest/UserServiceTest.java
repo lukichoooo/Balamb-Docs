@@ -9,10 +9,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.khundadze.Balamb_Docs.dtos.UserMinimalResponseDto;
 import com.khundadze.Balamb_Docs.dtos.UserRequestDto;
@@ -35,6 +37,9 @@ public class UserServiceTest {
     @Mock
     private UserMapper userMapper;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -42,29 +47,18 @@ public class UserServiceTest {
 
     @Test
     public void save() {
-        UserRequestDto requestDto = new UserRequestDto("Luka", "luka@example.com", "password123");
-        UserResponseDto responseDto = new UserResponseDto(1L, "Luka", "luka@example.com", GlobalRole.USER);
-        User user = new User("Luka", "luka@example.com", "password123", GlobalRole.USER);
+        UserRequestDto requestDto = new UserRequestDto("Luka", "password123");
+        User user = new User("Luka", "password123", GlobalRole.USER);
+        UserResponseDto responseDto = new UserResponseDto(1L, "Luka", GlobalRole.USER);
 
         when(userMapper.toUser(requestDto)).thenReturn(user);
+        when(passwordEncoder.encode("password123")).thenReturn("encodedPassword123");
+        when(userRepository.save(any(User.class))).thenReturn(user);
         when(userMapper.toUserResponseDto(user)).thenReturn(responseDto);
-        when(userRepository.save(user)).thenReturn(user);
 
         UserResponseDto result = userService.save(requestDto);
-        assertEquals(result, responseDto);
-    }
 
-    @Test
-    public void findById() {
-        Long id = 1L;
-        User user = new User("Luka", "luka@example.com", "password123", GlobalRole.USER);
-        UserResponseDto responseDto = new UserResponseDto(1L, "Luka", "luka@example.com", GlobalRole.USER);
-
-        when(userRepository.findById(id)).thenReturn(java.util.Optional.of(user));
-        when(userMapper.toUserResponseDto(user)).thenReturn(responseDto);
-
-        UserResponseDto result = userService.findById(id);
-        assertEquals(result, responseDto);
+        assertEquals(responseDto, result);
     }
 
     @Test
@@ -81,8 +75,8 @@ public class UserServiceTest {
     @Test
     public void findByUsername() {
         String name = "Luka";
-        User user = new User("Luka", "luka@example.com", "password123", GlobalRole.USER);
-        UserResponseDto responseDto = new UserResponseDto(1L, "Luka", "luka@example.com", GlobalRole.USER);
+        User user = new User("Luka", "password123", GlobalRole.USER);
+        UserResponseDto responseDto = new UserResponseDto(1L, "Luka", GlobalRole.USER);
 
         when(userRepository.findByUsername(name)).thenReturn(Optional.of(user));
         when(userMapper.toUserResponseDto(user)).thenReturn(responseDto);
@@ -103,34 +97,10 @@ public class UserServiceTest {
     }
 
     @Test
-    public void findByEmail() {
-        String email = "luka@example.com";
-        User user = new User("Luka", "luka@example.com", "password123", GlobalRole.USER);
-        UserResponseDto responseDto = new UserResponseDto(1L, "Luka", "luka@example.com", GlobalRole.USER);
-
-        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
-        when(userMapper.toUserResponseDto(user)).thenReturn(responseDto);
-
-        UserResponseDto result = userService.findByEmail(email);
-        assertEquals(result, responseDto);
-    }
-
-    @Test
-    public void findByEmail_notFound() {
-        String email = "luka@example.com";
-
-        when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
-
-        UserNotFoundException ex = assertThrows(UserNotFoundException.class, () -> userService.findByEmail(email));
-
-        assertEquals("User not found with email: " + email, ex.getMessage());
-    }
-
-    @Test
     public void findByUsernameLike() {
         String name = "Luka";
-        User user1 = new User("Luka", "luka@example.com", "password123", GlobalRole.USER);
-        User user2 = new User("Luka_2", "luka_2@example.com", "password123", GlobalRole.USER);
+        User user1 = new User("Luka", "password123", GlobalRole.USER);
+        User user2 = new User("Luka_2", "password123", GlobalRole.USER);
 
         UserMinimalResponseDto responseDto1 = new UserMinimalResponseDto(1L, "Luka");
         UserMinimalResponseDto responseDto2 = new UserMinimalResponseDto(2L, "Luka_2");

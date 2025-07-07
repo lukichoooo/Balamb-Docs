@@ -43,16 +43,6 @@ const RegisterPage = () => {
                             />
                         </div>
                         <div className={styles['form-group']}>
-                            <label>Email</label>
-                            <input
-                                type="email"
-                                className={styles['form-control']}
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                required
-                            />
-                        </div>
-                        <div className={styles['form-group']}>
                             <label>Password</label>
                             <input
                                 type="password"

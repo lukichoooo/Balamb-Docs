@@ -2,15 +2,14 @@ package com.khundadze.UserTest;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import jakarta.validation.Validation;
-import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import com.khundadze.Balamb_Docs.dtos.UserRequestDto;
+
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 
 public class UserRequestDtoValidationTest {
 
@@ -24,14 +23,14 @@ public class UserRequestDtoValidationTest {
 
     @Test
     public void invalidNameShouldFailValidation() {
-        UserRequestDto dto = new UserRequestDto("", "luka@example.com", "password123");
+        UserRequestDto dto = new UserRequestDto("", "password123");
         var violations = validator.validate(dto);
         assertFalse(violations.isEmpty());
     }
 
     @Test
     public void validDtoShouldPassValidation() {
-        UserRequestDto dto = new UserRequestDto("Luka", "luka@example.com", "password123");
+        UserRequestDto dto = new UserRequestDto("Luka", "password123");
         var violations = validator.validate(dto);
         assertTrue(violations.isEmpty());
     }

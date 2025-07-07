@@ -13,7 +13,6 @@ type LoginRequest = {
 
 type RegisterRequest = {
     username: string;
-    email: string;
     password: string;
 };
 

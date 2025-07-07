@@ -31,7 +31,6 @@ public class BalambDocsApplication implements CommandLineRunner {
 		for (int i = 1; i <= 20; i++) {
 			UserRequestDto userRequestDto = new UserRequestDto(
 					faker.name().firstName(),
-					faker.internet().emailAddress(),
 					faker.internet().password());
 			DocumentRequestDto documentRequestDto = new DocumentRequestDto(
 					faker.lorem().sentence(),
@@ -53,7 +52,6 @@ public class BalambDocsApplication implements CommandLineRunner {
 
 		UserRequestDto userRequestDto = new UserRequestDto(
 				"lukacho",
-				"xundadze@gmail.com",
 				"luka12345");
 		userService.save(userRequestDto);
 	}

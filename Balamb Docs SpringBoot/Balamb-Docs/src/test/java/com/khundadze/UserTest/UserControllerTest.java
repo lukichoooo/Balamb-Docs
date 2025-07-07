@@ -29,8 +29,8 @@ public class UserControllerTest {
 
     @Test
     public void save() {
-        UserRequestDto requestDto = new UserRequestDto("Luka", "luka@example.com", "password123");
-        UserResponseDto responseDto = new UserResponseDto(1L, "Luka", "luka@example.com", GlobalRole.USER);
+        UserRequestDto requestDto = new UserRequestDto("Luka", "password123");
+        UserResponseDto responseDto = new UserResponseDto(1L, "Luka", GlobalRole.USER);
 
         when(userService.save(requestDto)).thenReturn(responseDto);
 
@@ -41,7 +41,7 @@ public class UserControllerTest {
     @Test
     public void findById() {
         Long id = 1L;
-        UserResponseDto responseDto = new UserResponseDto(1L, "Luka", "luka@example.com", GlobalRole.USER);
+        UserResponseDto responseDto = new UserResponseDto(1L, "Luka", GlobalRole.USER);
 
         when(userService.findById(id)).thenReturn(responseDto);
 
@@ -52,7 +52,7 @@ public class UserControllerTest {
     @Test
     public void findByName() {
         String name = "Luka";
-        UserResponseDto responseDto = new UserResponseDto(1L, "Luka", "luka@example.com", GlobalRole.USER);
+        UserResponseDto responseDto = new UserResponseDto(1L, "Luka", GlobalRole.USER);
 
         when(userService.findByUsername(name)).thenReturn(responseDto);
 

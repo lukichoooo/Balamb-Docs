@@ -13,7 +13,6 @@ public class UserMapper {
 
     public User toUser(UserRequestDto requestUser) {
         return new User(requestUser.username(),
-                requestUser.email(),
                 requestUser.password(),
                 GlobalRole.USER);
     }
@@ -21,7 +20,6 @@ public class UserMapper {
     public UserResponseDto toUserResponseDto(User user) {
         return new UserResponseDto(user.getId(),
                 user.getUsername(),
-                user.getEmail(),
                 user.getGlobalRole());
     }
 

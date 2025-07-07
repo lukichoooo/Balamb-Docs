@@ -22,24 +22,22 @@ public class UserMapperTest {
 
     @Test
     public void toUser() {
-        UserRequestDto requestDto = new UserRequestDto("Luka", "luka@example.com", "password123");
+        UserRequestDto requestDto = new UserRequestDto("Luka", "password123");
         User user = mapper.toUser(requestDto);
         assertEquals(user.getUsername(), "Luka");
-        assertEquals(user.getEmail(), "luka@example.com");
         assertEquals(user.getPassword(), "password123");
     }
 
     @Test
     public void toUserResponseDto() {
-        User user = new User("Luka", "luka@example.com", "password123", GlobalRole.USER);
+        User user = new User("Luka", "password123", GlobalRole.USER);
         UserResponseDto responseDto = mapper.toUserResponseDto(user);
         assertEquals(responseDto.username(), "Luka");
-        assertEquals(responseDto.email(), "luka@example.com");
     }
 
     @Test
     public void toUserMinimalResponseDto() {
-        User user = new User("Luka", "luka@example.com", "password123", GlobalRole.USER);
+        User user = new User("Luka", "password123", GlobalRole.USER);
         UserMinimalResponseDto minimalResponseDto = mapper.toUserMinimalResponseDto(user);
         assertEquals(minimalResponseDto.username(), "Luka");
     }

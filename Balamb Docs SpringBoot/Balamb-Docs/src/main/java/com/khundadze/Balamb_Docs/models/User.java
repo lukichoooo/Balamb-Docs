@@ -57,10 +57,9 @@ public class User implements UserDetails {
         this.updatedAt = LocalDateTime.now();
     }
 
+    @Column(unique = true)
     private String username;
 
-    @Column(unique = true)
-    private String email;
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -70,9 +69,8 @@ public class User implements UserDetails {
     @JsonManagedReference
     private List<DocumentPermission> permissions = new ArrayList<>();
 
-    public User(String username, String email, String password, GlobalRole role) {
+    public User(String username, String password, GlobalRole role) {
         this.username = username;
-        this.email = email;
         this.password = password;
         this.globalRole = role;
     }
@@ -92,7 +90,7 @@ public class User implements UserDetails {
      */
     @Override
     public String getPassword() {
-        return password; // TODO
+        return password;
     }
 
     /**
