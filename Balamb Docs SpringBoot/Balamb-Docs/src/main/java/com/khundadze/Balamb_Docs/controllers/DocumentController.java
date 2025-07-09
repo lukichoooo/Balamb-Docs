@@ -1,5 +1,6 @@
 package com.khundadze.Balamb_Docs.controllers;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -60,7 +61,7 @@ public class DocumentController {
 
     @PutMapping("/updateContentById/{id}")
     public DocumentResponseDto updateContentById(@PathVariable("id") Long id,
-            @RequestBody String content) {
+            @RequestBody String content) throws AccessDeniedException {
         return documentService.updateContentById(id, content);
     }
 }

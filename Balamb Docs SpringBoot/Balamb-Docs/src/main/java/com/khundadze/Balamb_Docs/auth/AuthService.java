@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.khundadze.Balamb_Docs.configuration.JwtService;
+import com.khundadze.Balamb_Docs.exceptions.InvalidCredentialsException;
 import com.khundadze.Balamb_Docs.exceptions.UserNotFoundException;
 import com.khundadze.Balamb_Docs.models.GlobalRole;
 import com.khundadze.Balamb_Docs.models.User;
@@ -40,13 +41,13 @@ public class AuthService {
                             request.getUsername(),
                             request.getPassword()));
         } catch (Exception e) {
-            // You can throw a custom exception or return a specific response
-            throw new RuntimeException("Invalid username or password");
+            throw new InvalidCredentialsException("Invalid username or password");
         }
 
         var userOptional = userRepository.findByUsername(request.getUsername());
         if (userOptional.isEmpty())
             throw new UserNotFoundException("User not found with username: " + request.getUsername());
+
         var user = userOptional.get();
         var JwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder().token(JwtToken).build();

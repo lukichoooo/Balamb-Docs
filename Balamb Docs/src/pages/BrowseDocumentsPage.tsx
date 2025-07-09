@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import styles from "../styleModules/BrowseDocumentsPage.module.css";
 import DocumentSearchBox from "../components/DocumentSearchBox";
 import CreateDocumentButton from "../components/CreateDocumentButton";
-import { fetchDocumentsPage } from "../services/api";
+import { fetchDocumentsPage } from "../services/api_documents";
 
 export default function BrowseDocumentsPage() {
 

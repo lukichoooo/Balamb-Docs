@@ -5,7 +5,6 @@ import styles from '../styleModules/AuthPage.module.css';
 
 const RegisterPage = () => {
     const [username, setUsername] = useState('');
-    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
@@ -13,7 +12,7 @@ const RegisterPage = () => {
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const response = await AuthService.register({ username, email, password });
+            const response = await AuthService.register({ username, password });
             if (response) {
                 setMessage('Registration successful! You can now log in.');
                 navigate('/login');

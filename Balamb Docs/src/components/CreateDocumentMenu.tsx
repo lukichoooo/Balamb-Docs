@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import styles from "../styleModules/CreateDocumentMenu.module.css";
 import type { DocumentRequestDto } from "../types";
-import { saveDocument } from "../services/api";
+import { saveDocument } from "../services/api_documents";
 
 export default function CreateDocumentMenu({ onClose }: { onClose: () => void }) {
     const formRef = useRef<HTMLFormElement>(null);

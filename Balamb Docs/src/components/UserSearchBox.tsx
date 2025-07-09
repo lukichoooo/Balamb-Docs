@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "../styleModules/UserSearchBox.module.css";
 import type { User } from "../types";
-import { findByUsernameLike } from "../services/api";
+import { findByUsernameLike } from "../services/api_users";
 
 export default function UserSearchBox() {
     const [searchInput, setSearchInput] = useState("");

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import styles from "../styleModules/UserSearchBox.module.css";
 import type { DocumentMinimalResponseDto } from "../types";
-import { fetchDocumentsByNameLike } from "../services/api";
+import { fetchDocumentsByNameLike } from "../services/api_documents";
 
 export default function DocumentSearchBox() {
     const [searchInput, setSearchInput] = useState("");

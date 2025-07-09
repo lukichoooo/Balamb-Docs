@@ -3,9 +3,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react"
 import type { DocumentResponseDto } from "../types"
 import Document from "../components/Document";
-import { fetchDocumentsByid } from "../services/api";
-import { updateContentById } from "../services/api";
-import { deleteDocumentById } from "../services/api"
+import { fetchDocumentsByid, updateContentById, deleteDocumentById } from "../services/api_documents";
+
 
 export default function DocumentPage() {
     const params = useParams();
