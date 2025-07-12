@@ -11,15 +11,14 @@ import RegisterPage from './pages/RegisterPage';
 
 export default function App() {
   return (
-    <>
-      <NavbarWrapper />
-      <Routes>
-        {/* Public route */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+    <Routes>
+      {/* Public routes */}
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/register" element={<RegisterPage />} />
 
-        {/* Protected routes */}
-        <Route element={<RequireAuth />}>
+      {/* Protected routes with navbar */}
+      <Route element={<RequireAuth />}>
+        <Route element={<NavbarWrapper />}>
           <Route path="/" element={<Home />} />
           <Route path="/home" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -27,7 +26,7 @@ export default function App() {
           <Route path="/documents/:id" element={<DocumentPage />} />
           <Route path="/dashboard" element={<DashboardComponent />} />
         </Route>
-      </Routes>
-    </>
+      </Route>
+    </Routes>
   );
 }

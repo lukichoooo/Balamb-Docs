@@ -1,24 +1,35 @@
 package com.khundadze.DocumentTest;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.argThat;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.khundadze.Balamb_Docs.dtos.DocumentMinimalResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentRequestDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentResponseDto;
 import com.khundadze.Balamb_Docs.exceptions.DocumentNotFoundException;
 import com.khundadze.Balamb_Docs.models.Document;
+import com.khundadze.Balamb_Docs.models.DocumentRole;
+import com.khundadze.Balamb_Docs.models.User;
+import com.khundadze.Balamb_Docs.repositories.IDocumentPermissionRepository;
 import com.khundadze.Balamb_Docs.repositories.IDocumentRepository;
+import com.khundadze.Balamb_Docs.repositories.IUserRepository;
 import com.khundadze.Balamb_Docs.services.DocumentMapper;
 import com.khundadze.Balamb_Docs.services.DocumentService;
 
@@ -33,24 +44,52 @@ public class DocumentServiceTest {
     @Mock
     IDocumentRepository repo;
 
+    @Mock
+    IUserRepository userRepo;
+
+    @Mock
+    IDocumentPermissionRepository permissionRepo;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
     @Test
-    public void save() {
-        DocumentResponseDto responseDto = new DocumentResponseDto(1L, "name", "description", "content");
+    public void save_shouldCreateDocumentAndPermissionAndReturnDto() {
+        // Arrange
         DocumentRequestDto requestDto = new DocumentRequestDto("name", "description", "content");
         Document document = new Document("name", "description", "content");
+        document.setId(1L); // simulate persisted entity
 
+        DocumentResponseDto responseDto = new DocumentResponseDto(1L, "name", "description", "content");
+
+        User mockUser = new User();
+        mockUser.setId(10L);
+
+        // Mock SecurityContext
+        Authentication authentication = mock(Authentication.class);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getName()).thenReturn("testuser");
+        SecurityContextHolder.setContext(securityContext);
+
+        // Mock behavior
+        when(userRepo.findByUsername("testuser")).thenReturn(Optional.of(mockUser));
         when(mapper.toDocument(requestDto)).thenReturn(document);
         when(repo.save(document)).thenReturn(document);
         when(mapper.toDocumentResponseDto(document)).thenReturn(responseDto);
 
+        // Act
         DocumentResponseDto result = documentService.save(requestDto);
 
+        // Assert
         assertEquals(responseDto, result);
+        verify(permissionRepo).save(argThat(permission -> permission.getUser().equals(mockUser) &&
+                permission.getDocument().equals(document) &&
+                permission.getRole() == DocumentRole.OWNER));
+
+        SecurityContextHolder.clearContext();
     }
 
     @Test

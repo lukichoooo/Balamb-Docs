@@ -15,6 +15,7 @@ import com.khundadze.Balamb_Docs.exceptions.DocumentNotFoundException;
 import com.khundadze.Balamb_Docs.exceptions.UserNotFoundException;
 import com.khundadze.Balamb_Docs.models.Document;
 import com.khundadze.Balamb_Docs.models.DocumentPermission;
+import com.khundadze.Balamb_Docs.models.DocumentPermissionId;
 import com.khundadze.Balamb_Docs.models.DocumentRole;
 import com.khundadze.Balamb_Docs.models.User;
 import com.khundadze.Balamb_Docs.repositories.IDocumentPermissionRepository;
@@ -33,8 +34,24 @@ public class DocumentService {
     private final IDocumentPermissionRepository documentPermissionRepository;
 
     public DocumentResponseDto save(DocumentRequestDto requestDocument) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
         Document document = mapper.toDocument(requestDocument);
-        return mapper.toDocumentResponseDto(documentRepository.save(document));
+        Document savedDocument = documentRepository.save(document);
+
+        DocumentPermission permission = DocumentPermission.builder()
+                .id(new DocumentPermissionId(savedDocument.getId(), user.getId()))
+                .document(savedDocument)
+                .user(user)
+                .role(DocumentRole.OWNER)
+                .build();
+
+        documentPermissionRepository.save(permission);
+
+        return mapper.toDocumentResponseDto(savedDocument);
     }
 
     public DocumentResponseDto findById(Long id) {
@@ -70,7 +87,17 @@ public class DocumentService {
                 .toList();
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Long id) throws AccessDeniedException {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        assertOwner(id, user.getId());
+
+        documentPermissionRepository.deleteAllByDocumentId(id);
+        // delete asociated roles
+
         documentRepository.deleteById(id);
     }
 
@@ -90,10 +117,21 @@ public class DocumentService {
     private void assertEditorOrOwner(Long documentId, Long userId) throws AccessDeniedException {
         DocumentRole role = documentPermissionRepository
                 .findByDocument_IdAndUser_Id(documentId, userId)
-                .orElseThrow(() -> new RuntimeException("No permission"))
+                .orElseThrow(() -> new AccessDeniedException("No permission"))
                 .getRole();
 
         if (role != DocumentRole.OWNER && role != DocumentRole.EDITOR) {
+            throw new AccessDeniedException("Forbidden");
+        }
+    }
+
+    private void assertOwner(Long documentId, Long userId) throws AccessDeniedException {
+        DocumentRole role = documentPermissionRepository
+                .findByDocument_IdAndUser_Id(documentId, userId)
+                .orElseThrow(() -> new AccessDeniedException("No permission"))
+                .getRole();
+
+        if (role != DocumentRole.OWNER) {
             throw new AccessDeniedException("Forbidden");
         }
     }

@@ -1,0 +1,25 @@
+/* DocumentPermissionsButton.module.css */
+
+.button {
+    background-color: #14acac !important;
+    /* teal */
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0, 128, 128, 0.4);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.button:hover {
+    background-color: #005f5f;
+    /* darker teal */
+    box-shadow: 0 5px 12px rgba(0, 95, 95, 0.6);
+}
+
+.button:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.7);
+}

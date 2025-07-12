@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.khundadze.Balamb_Docs.models.DocumentPermission;
 import com.khundadze.Balamb_Docs.models.DocumentPermissionId;
 
+import jakarta.transaction.Transactional;
+
 public interface IDocumentPermissionRepository extends JpaRepository<DocumentPermission, DocumentPermissionId> {
 
     List<DocumentPermission> findByDocument_Id(Long documentId);
@@ -15,4 +17,7 @@ public interface IDocumentPermissionRepository extends JpaRepository<DocumentPer
     List<DocumentPermission> findByUser_Id(Long userId);
 
     Optional<DocumentPermission> findByDocument_IdAndUser_Id(Long documentId, Long userId);
+
+    @Transactional
+    void deleteAllByDocumentId(Long documentId);
 }

@@ -7,6 +7,10 @@
 
     background-color: #111111;
 
+    /* so .card:hover z-index works inside */
+    position: relative;
+    z-index: 0;
+
     padding: 2rem;
     gap: 1rem;
 }

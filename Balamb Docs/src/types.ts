@@ -21,3 +21,11 @@ export type DocumentRequestDto = {
     description: string;
     content: string;
 }
+
+export type DocumentRole = "OWNER" | "EDITOR" | "VIEWER";
+
+export interface DocumentPermission {
+    documentId: number;
+    userId: number;
+    role: DocumentRole;
+}

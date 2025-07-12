@@ -53,8 +53,8 @@ public class Document {
     @Lob
     private String content;
 
-    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
+    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DocumentPermission> permissions;
 
     public Document(String name, String description, String content) {

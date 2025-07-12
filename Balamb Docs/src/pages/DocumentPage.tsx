@@ -5,6 +5,7 @@ import type { DocumentResponseDto } from "../types"
 import Document from "../components/Document";
 import { fetchDocumentsByid, updateContentById, deleteDocumentById } from "../services/api_documents";
 
+import DocumentPermissionsButton from "../components/DocumentPermissionsButton";
 
 export default function DocumentPage() {
     const params = useParams();
@@ -54,13 +55,17 @@ export default function DocumentPage() {
             .then(() => {
                 setDocument({ id: -1, name: "", description: "", content: "" });
                 setIsEditing(false);
+                navigator.clipboard.writeText(window.location.href)
+                    .then(() => alert("Removed The Document Successfully!"))
+                    .catch(err => console.error("Copied URL failed", err));
                 navigate("/documents");
             })
-            .catch(err => console.error(err));
-        navigator.clipboard.writeText(window.location.href)
-            .then(() => alert("Removed The Document Successfully!"))
-            .catch(err => console.error("Failed Delete The Document", err));
+            .catch(err => {
+                console.error("Delete failed", err);
+                alert("Failed to delete the document!");
+            });
     }
+
 
 
     function handleShare() {
@@ -90,6 +95,7 @@ export default function DocumentPage() {
                         <button onClick={handleSave}>Save Changes</button>
                         <button onClick={handleShare}>Share</button>
                         <button onClick={handleDelete}>Delete</button>
+                        <DocumentPermissionsButton />
                     </>
                 )}
 
