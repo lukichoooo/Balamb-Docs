@@ -24,6 +24,11 @@ export type DocumentRequestDto = {
 
 export type DocumentRole = "OWNER" | "EDITOR" | "VIEWER";
 
+export type DocumentPermissionUserRoleDto = {
+    username: string;
+    role: DocumentRole;
+}
+
 export interface DocumentPermission {
     documentId: number;
     userId: number;

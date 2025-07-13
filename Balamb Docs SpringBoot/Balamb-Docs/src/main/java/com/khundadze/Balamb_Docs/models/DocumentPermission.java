@@ -1,5 +1,7 @@
 package com.khundadze.Balamb_Docs.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -29,11 +31,13 @@ public class DocumentPermission {
     @ManyToOne
     @MapsId("documentId")
     @JoinColumn(name = "document_id")
+    @JsonIgnore
     private Document document;
 
     @ManyToOne
     @MapsId("userId")
     @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User user;
 
     @Enumerated(EnumType.STRING)

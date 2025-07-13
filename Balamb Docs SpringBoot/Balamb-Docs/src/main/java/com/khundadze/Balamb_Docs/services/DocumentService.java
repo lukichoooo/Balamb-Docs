@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class DocumentService {
+public class DocumentService { // TODO: add private / public documents
 
     private final DocumentMapper mapper;
     private final IDocumentRepository documentRepository;
@@ -101,7 +101,7 @@ public class DocumentService {
         documentRepository.deleteById(id);
     }
 
-    public DocumentResponseDto updateContentById(Long id, String content) throws AccessDeniedException {
+    public DocumentResponseDto updateContentById(Long id, String content) throws AccessDeniedException { // TODO: make sure only peoples with some DocumentPermission can access
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
         User user = userRepository.findByUsername(username)
