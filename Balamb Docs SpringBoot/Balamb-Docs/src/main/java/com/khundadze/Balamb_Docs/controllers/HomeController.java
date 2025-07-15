@@ -10,6 +10,6 @@ public class HomeController {
 
     @GetMapping("/welcomeText")
     public String home() {
-        return "Hello heyyyyyyyyyyyyy!";
+        return "Welcome to Balamb Docs — your place to create, collaborate, and share documents securely!";
     }
 }

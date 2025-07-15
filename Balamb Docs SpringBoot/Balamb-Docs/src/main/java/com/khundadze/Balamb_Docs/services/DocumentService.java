@@ -31,6 +31,7 @@ public class DocumentService { // TODO: add private / public documents
     private final DocumentMapper mapper;
     private final IDocumentRepository documentRepository;
     private final IUserRepository userRepository;
+    private final DocumentPermissionService documentPermissionService;
     private final IDocumentPermissionRepository documentPermissionRepository;
 
     public DocumentResponseDto save(DocumentRequestDto requestDocument) {
@@ -95,8 +96,8 @@ public class DocumentService { // TODO: add private / public documents
 
         assertOwner(id, user.getId());
 
-        documentPermissionRepository.deleteAllByDocumentId(id);
         // delete asociated roles
+        documentPermissionRepository.deleteAllByDocumentId(id);
 
         documentRepository.deleteById(id);
     }
@@ -111,6 +112,72 @@ public class DocumentService { // TODO: add private / public documents
 
         documentRepository.updateContentById(id, content);
         return findById(id);
+    }
+
+    public List<DocumentMinimalResponseDto> getDocumentsOwnedByUsername(String username) {
+        Long userId = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found"))
+                .getId();
+
+        List<DocumentPermission> ownedDocumentPermissions = documentPermissionRepository
+                .findByUser_IdAndRole(userId, DocumentRole.OWNER);
+
+        List<Long> documentIds = ownedDocumentPermissions.stream()
+                .map(DocumentPermission::getDocument)
+                .map(Document::getId)
+                .toList();
+
+        if (documentIds.isEmpty()) {
+            return List.of();
+        }
+
+        List<Document> ownedDocuments = documentRepository.findAllById(documentIds);
+
+        return ownedDocuments.stream()
+                .map(mapper::toDocumentMinimalResponseDto)
+                .toList();
+    }
+
+    public List<DocumentMinimalResponseDto> getDocumentsOwnedByUserId(Long userId) {
+        List<DocumentPermission> ownedDocumentPermissions = documentPermissionRepository
+                .findByUser_IdAndRole(userId, DocumentRole.OWNER);
+
+        List<Long> documentIds = ownedDocumentPermissions.stream()
+                .map(DocumentPermission::getDocument)
+                .map(Document::getId)
+                .toList();
+
+        if (documentIds.isEmpty()) {
+            return List.of();
+        }
+
+        List<Document> ownedDocuments = documentRepository.findAllById(documentIds);
+
+        return ownedDocuments.stream()
+                .map(mapper::toDocumentMinimalResponseDto)
+                .toList();
+    }
+
+    public List<DocumentMinimalResponseDto> getDocumentsByCollaboratorId(Long userId) {
+        List<DocumentRole> roles = List.of(DocumentRole.VIEWER, DocumentRole.EDITOR);
+
+        List<DocumentPermission> collaboratorPermissions = documentPermissionRepository
+                .findByUser_IdAndRoleIn(userId, roles);
+
+        List<Long> documentIds = collaboratorPermissions.stream()
+                .map(DocumentPermission::getDocument)
+                .map(Document::getId)
+                .toList();
+
+        if (documentIds.isEmpty()) {
+            return List.of();
+        }
+
+        List<Document> documents = documentRepository.findAllById(documentIds);
+
+        return documents.stream()
+                .map(mapper::toDocumentMinimalResponseDto)
+                .toList();
     }
 
     // helper methods

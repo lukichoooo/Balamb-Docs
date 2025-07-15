@@ -31,4 +31,8 @@ public interface IDocumentPermissionRepository extends JpaRepository<DocumentPer
     @Query("DELETE FROM DocumentPermission dp WHERE dp.document.id = :documentId AND dp.user.username = :username")
     void deleteByDocumentIdAndUsername(@Param("documentId") Long documentId, @Param("username") String username);
 
+    List<DocumentPermission> findByUser_IdAndRole(Long userId, DocumentRole role);
+
+    List<DocumentPermission> findByUser_IdAndRoleIn(Long userId, List<DocumentRole> roles);
+
 }

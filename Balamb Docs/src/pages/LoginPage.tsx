@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import AuthService from '../services/AuthService';
 import styles from '../styleModules/AuthPage.module.css';
 import { AuthContext } from '../auth/AuthContext.tsx';
+import { findByUsername } from '../services/api_users.ts';
 
 const LoginPage = () => {
     const [username, setUsername] = useState('');
@@ -19,6 +20,8 @@ const LoginPage = () => {
                 localStorage.setItem('token', response.token);
                 setIsLoggedIn(true);
                 navigate('/dashboard');
+                localStorage.setItem("username", username);
+                localStorage.setItem("id", (await findByUsername(username)).id.toString());
             } else {
                 setMessage('Invalid credentials');
             }

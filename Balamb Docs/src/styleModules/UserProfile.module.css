@@ -1,0 +1,51 @@
+.profileContainer {
+    padding: 16px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.username {
+    color: cyan;
+    margin-bottom: 8px;
+}
+
+.sectionTitle {
+    margin-top: 16px;
+    margin-bottom: 8px;
+}
+
+.documentsContainer {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #0c0c0c;
+}
+
+.documentItem {
+    padding: 8px;
+    margin-bottom: 8px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.documentItem:hover {
+    background-color: #142325;
+}
+
+.settingsButton {
+    margin-top: 16px;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: cyan;
+    color: black;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.settingsButton:hover {
+    background-color: #00c8c8;
+}

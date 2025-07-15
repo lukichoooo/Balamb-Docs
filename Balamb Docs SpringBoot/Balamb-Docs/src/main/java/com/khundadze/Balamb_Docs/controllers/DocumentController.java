@@ -64,4 +64,20 @@ public class DocumentController {
             @RequestBody String content) throws AccessDeniedException {
         return documentService.updateContentById(id, content);
     }
+
+    @GetMapping("/getDocumentsOwnedByUsername/{username}")
+    public List<DocumentMinimalResponseDto> getDocumentsOwnedByUsername(@PathVariable("username") String username) {
+        return documentService.getDocumentsOwnedByUsername(username);
+    }
+
+    @GetMapping("/getDocumentsOwnedByUserId/{userId}") // returns all documents owned by user
+    public List<DocumentMinimalResponseDto> getDocumentsOwnedByUserId(@PathVariable("userId") Long userId) {
+        return documentService.getDocumentsOwnedByUserId(userId);
+    }
+
+    @GetMapping("/getDocumentsByCollaboratorId/{userId}")
+    public List<DocumentMinimalResponseDto> getDocumentsByCollaboratorId(@PathVariable("userId") Long userId) {
+        return documentService.getDocumentsByCollaboratorId(userId);
+    }
+
 }

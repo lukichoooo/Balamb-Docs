@@ -17,7 +17,9 @@ export default function Home() {
             <h1>Home Page</h1>
             <p>{welcomeText}</p>
             <Link to="/about">
-                <button>About Us</button>
+                <button style={{ alignSelf: "center", display: "block", margin: "16px auto" }}>
+                    About Us
+                </button>
             </Link>
         </>
     )

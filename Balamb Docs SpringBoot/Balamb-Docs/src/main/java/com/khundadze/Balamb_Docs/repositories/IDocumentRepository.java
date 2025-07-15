@@ -34,6 +34,8 @@ public interface IDocumentRepository extends JpaRepository<Document, Long> {
             @Param("id") Long id,
             @Param("content") String content);
 
+    Page<Document> findAllByIdIn(List<Long> ids, Pageable pageable);
+
     // Optional: search by name with paging
     Page<Document> findByNameStartsWithIgnoreCase(String name, Pageable pageable);
 
@@ -42,4 +44,11 @@ public interface IDocumentRepository extends JpaRepository<Document, Long> {
 
     // Optional: search by content with paging
     Page<Document> findByContentStartsWithIgnoreCase(String content, Pageable pageable);
+
+    // Optional: search by name, description, or content with paging
+    Page<Document> findByNameStartsWithIgnoreCaseOrDescriptionStartsWithIgnoreCaseOrContentStartsWithIgnoreCase(
+            String name,
+            String description,
+            String content,
+            Pageable pageable);
 }

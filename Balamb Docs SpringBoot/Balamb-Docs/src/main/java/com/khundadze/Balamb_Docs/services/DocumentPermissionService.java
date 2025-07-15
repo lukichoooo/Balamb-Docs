@@ -2,8 +2,8 @@ package com.khundadze.Balamb_Docs.services;
 
 import java.nio.file.AccessDeniedException;
 import java.util.List;
-
 import java.util.Optional;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -49,6 +49,10 @@ public class DocumentPermissionService {
     public DocumentPermission getPermission(Long documentId, Long userId) {
         return documentPermissionRepository.findByDocument_IdAndUser_Id(documentId, userId)
                 .orElseThrow(() -> new RuntimeException("Permission not found"));
+    }
+
+    public List<DocumentPermission> getOwnedByUserId(Long userId) {
+        return documentPermissionRepository.findByUser_IdAndRole(userId, DocumentRole.OWNER);
     }
 
     public DocumentPermission createDocumentPermission(Long documentId, String username, String role)

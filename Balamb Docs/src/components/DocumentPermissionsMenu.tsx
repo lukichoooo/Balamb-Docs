@@ -37,8 +37,7 @@ export default function DocumentPermissionsMenu({ onClose }: DocumentPermissions
             setRole("viewer");
             setEditing(false);
         } catch (error) {
-            console.error("Failed to create permission:", error);
-            // Optionally show error feedback to user
+            alert("Failed to create permission");
         }
     }
 
@@ -55,38 +54,43 @@ export default function DocumentPermissionsMenu({ onClose }: DocumentPermissions
                     {permissions.map((permission, idx) => (
                         <li key={idx} className={styles.permissionItem}>
                             <span>{permission.username}</span>
-                            <select
-                                value={permission.role.toLowerCase()}
-                                onChange={async (e) => {
-                                    try {
-                                        const newRole = e.target.value;
-                                        await updateDocumentPermission(documentId, permission.username, newRole);
-                                        const updated = await getRolesByDocumentId(documentId);
-                                        setPermissions(updated);
-                                    } catch (error) {
-                                        alert("Failed to update permission:");
-                                    }
-                                }}
-                                className={styles.select}
-                            >
-                                <option value="editor">Editor</option>
-                                <option value="viewer">Viewer</option>
-                            </select>
-
-                            <button
-                                onClick={async () => {
-                                    try {
-                                        await deleteDocumentPermission(documentId, permission.username);
-                                        const updated = await getRolesByDocumentId(documentId);
-                                        setPermissions(updated);
-                                    } catch (error) {
-                                        alert("Failed to delete permission");
-                                    }
-                                }}
-                                className={styles.deleteButton}
-                            >
-                                Remove
-                            </button>
+                            {permission.role.toLowerCase() === "owner" ? (
+                                <span className={styles.ownerLabel}> - Owner</span>
+                            ) : (
+                                <select
+                                    value={permission.role.toLowerCase()}
+                                    onChange={async (e) => {
+                                        try {
+                                            const newRole = e.target.value;
+                                            await updateDocumentPermission(documentId, permission.username, newRole);
+                                            const updated = await getRolesByDocumentId(documentId);
+                                            setPermissions(updated);
+                                        } catch (error) {
+                                            alert("Failed to update permission");
+                                        }
+                                    }}
+                                    className={styles.select}
+                                >
+                                    <option value="editor">Editor</option>
+                                    <option value="viewer">Viewer</option>
+                                </select>
+                            )}
+                            {permission.role.toLowerCase() !== "owner" && (
+                                <button
+                                    onClick={async () => {
+                                        try {
+                                            await deleteDocumentPermission(documentId, permission.username);
+                                            const updated = await getRolesByDocumentId(documentId);
+                                            setPermissions(updated);
+                                        } catch (error) {
+                                            alert("Failed to delete permission");
+                                        }
+                                    }}
+                                    className={styles.deleteButton}
+                                >
+                                    Remove
+                                </button>
+                            )}
                         </li>
                     ))}
 

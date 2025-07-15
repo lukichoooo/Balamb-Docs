@@ -6,3 +6,12 @@ export async function findByUsernameLike(username: string): Promise<User[]> {
     return res.data;
 }
 
+export async function findByUsername(username: string): Promise<User> {
+    const res = await axiosInstance.get(`/users/findByUsername/${username}`);
+    return res.data;
+}
+
+export async function findById(id: number): Promise<User> {
+    const res = await axiosInstance.get(`/users/findById/${id}`);
+    return res.data;
+}

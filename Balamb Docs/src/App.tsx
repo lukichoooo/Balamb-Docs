@@ -8,6 +8,7 @@ import DashboardComponent from './auth/DashboardComponent';
 import RequireAuth from './auth/RequireAuth';
 import NavbarWrapper from './pages/NavbarWrapper.tsx';
 import RegisterPage from './pages/RegisterPage';
+import UserProfile from "./pages/UserProfile.tsx";
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
       <Route element={<RequireAuth />}>
         <Route element={<NavbarWrapper />}>
           <Route path="/" element={<Home />} />
+          <Route path="/profile/:id" element={<UserProfile />} />
           <Route path="/home" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/documents" element={<BrowseDocumentsPage />} />

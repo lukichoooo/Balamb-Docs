@@ -15,9 +15,7 @@ import com.khundadze.Balamb_Docs.repositories.IUserRepository;
 @Service
 public class UserService {
     private final IUserRepository userRepository;
-
     private final UserMapper userMapper;
-
     private final PasswordEncoder passwordEncoder;
 
     public UserService(IUserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {

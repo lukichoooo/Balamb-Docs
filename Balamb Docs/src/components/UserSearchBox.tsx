@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import styles from "../styleModules/UserSearchBox.module.css";
 import type { User } from "../types";
 import { findByUsernameLike } from "../services/api_users";
+import { Link } from "react-router-dom";
 
 export default function UserSearchBox() {
     const [searchInput, setSearchInput] = useState("");
@@ -44,6 +45,7 @@ export default function UserSearchBox() {
     }, [searchInput]);
 
 
+
     return (
         <div className={styles.searchContainer} ref={containerRef}>
             <input
@@ -57,12 +59,15 @@ export default function UserSearchBox() {
             {showResults && searchResult.length > 0 && (
                 <ul className={styles.dropdown}>
                     {searchResult.map(user => (
-                        <li key={user.id} className={styles.item}>
-                            {user.username}
-                        </li>
+                        <Link key={user.id} to={`/profile/${user.id}`}>
+                            <li className={styles.item}>
+                                {user.username}
+                            </li>
+                        </Link>
                     ))}
                 </ul>
             )}
+
         </div>
     );
 }

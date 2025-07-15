@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import styles from "../styleModules/UserSearchBox.module.css";
 import type { DocumentMinimalResponseDto } from "../types";
 import { fetchDocumentsByNameLike } from "../services/api_documents";
+import { Link } from "react-router-dom";
 
 export default function DocumentSearchBox() {
     const [searchInput, setSearchInput] = useState("");
@@ -54,10 +55,12 @@ export default function DocumentSearchBox() {
             />
             {showResults && searchResult.length > 0 && (
                 <ul className={styles.dropdown}>
-                    {searchResult.map(user => (
-                        <li key={user.id} className={styles.item}>
-                            {user.name}
-                        </li>
+                    {searchResult.map(doc => (
+                        <Link key={doc.id} to={`/documents/${doc.id}`}>
+                            <li key={doc.id} className={styles.item}>
+                                {doc.name}
+                            </li>
+                        </Link>
                     ))}
                 </ul>
             )}

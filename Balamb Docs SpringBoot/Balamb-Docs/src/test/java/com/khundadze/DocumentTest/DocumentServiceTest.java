@@ -25,6 +25,8 @@ import com.khundadze.Balamb_Docs.dtos.DocumentRequestDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentResponseDto;
 import com.khundadze.Balamb_Docs.exceptions.DocumentNotFoundException;
 import com.khundadze.Balamb_Docs.models.Document;
+import com.khundadze.Balamb_Docs.models.DocumentPermission;
+import com.khundadze.Balamb_Docs.models.DocumentPermissionId;
 import com.khundadze.Balamb_Docs.models.DocumentRole;
 import com.khundadze.Balamb_Docs.models.User;
 import com.khundadze.Balamb_Docs.repositories.IDocumentPermissionRepository;
@@ -42,13 +44,13 @@ public class DocumentServiceTest {
     DocumentMapper mapper;
 
     @Mock
-    IDocumentRepository repo;
+    IDocumentRepository documentRepository;
 
     @Mock
-    IUserRepository userRepo;
+    IUserRepository userRepository;
 
     @Mock
-    IDocumentPermissionRepository permissionRepo;
+    IDocumentPermissionRepository documentPermissionRepository;
 
     @BeforeEach
     public void setUp() {
@@ -75,9 +77,9 @@ public class DocumentServiceTest {
         SecurityContextHolder.setContext(securityContext);
 
         // Mock behavior
-        when(userRepo.findByUsername("testuser")).thenReturn(Optional.of(mockUser));
+        when(userRepository.findByUsername("testuser")).thenReturn(Optional.of(mockUser));
         when(mapper.toDocument(requestDto)).thenReturn(document);
-        when(repo.save(document)).thenReturn(document);
+        when(documentRepository.save(document)).thenReturn(document);
         when(mapper.toDocumentResponseDto(document)).thenReturn(responseDto);
 
         // Act
@@ -85,7 +87,7 @@ public class DocumentServiceTest {
 
         // Assert
         assertEquals(responseDto, result);
-        verify(permissionRepo).save(argThat(permission -> permission.getUser().equals(mockUser) &&
+        verify(documentPermissionRepository).save(argThat(permission -> permission.getUser().equals(mockUser) &&
                 permission.getDocument().equals(document) &&
                 permission.getRole() == DocumentRole.OWNER));
 
@@ -98,7 +100,7 @@ public class DocumentServiceTest {
         DocumentResponseDto responseDto = new DocumentResponseDto(1L, "name", "description", "content");
         Document document = new Document("name", "description", "content");
 
-        when(repo.findById(id)).thenReturn(java.util.Optional.of(document));
+        when(documentRepository.findById(id)).thenReturn(java.util.Optional.of(document));
         when(mapper.toDocumentResponseDto(document)).thenReturn(responseDto);
 
         DocumentResponseDto result = documentService.findById(id);
@@ -110,7 +112,7 @@ public class DocumentServiceTest {
     public void findById_notFound() {
         Long id = 1L;
 
-        when(repo.findById(id)).thenReturn(java.util.Optional.empty());
+        when(documentRepository.findById(id)).thenReturn(java.util.Optional.empty());
 
         DocumentNotFoundException ex = assertThrows(DocumentNotFoundException.class,
                 () -> documentService.findById(id));
@@ -124,7 +126,7 @@ public class DocumentServiceTest {
         DocumentMinimalResponseDto responseDto = new DocumentMinimalResponseDto(1L, "name");
         Document document = new Document("name", "description", "content");
 
-        when(repo.findTop10ByNameStartsWithIgnoreCase(name)).thenReturn(List.of(document));
+        when(documentRepository.findTop10ByNameStartsWithIgnoreCase(name)).thenReturn(List.of(document));
         when(mapper.toDocumentMinimalResponseDto(document)).thenReturn(responseDto);
 
         List<DocumentMinimalResponseDto> result = documentService.findByNameLike(name);
@@ -136,7 +138,7 @@ public class DocumentServiceTest {
     public void findByNameLike_notFound() {
         String name = "name";
 
-        when(repo.findTop10ByNameStartsWithIgnoreCase(name)).thenReturn(List.of());
+        when(documentRepository.findTop10ByNameStartsWithIgnoreCase(name)).thenReturn(List.of());
 
         DocumentNotFoundException ex = assertThrows(DocumentNotFoundException.class,
                 () -> documentService.findByNameLike(name));
@@ -150,7 +152,7 @@ public class DocumentServiceTest {
         DocumentResponseDto responseDto = new DocumentResponseDto(1L, "name", "description", "content");
         Document document = new Document("name", "description", "content");
 
-        when(repo.findAll(PageRequest.of(pageNumber, 12))).thenReturn(new PageImpl<>(List.of(document)));
+        when(documentRepository.findAll(PageRequest.of(pageNumber, 12))).thenReturn(new PageImpl<>(List.of(document)));
         when(mapper.toDocumentResponseDto(document)).thenReturn(responseDto);
 
         List<DocumentResponseDto> result = documentService.getPage(pageNumber);
@@ -159,6 +161,103 @@ public class DocumentServiceTest {
     }
 
     @Test
-    public void updateById() { // TODO
+    public void getDocumentsOwnedByUsername() {
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("testuser");
+
+        Document document = new Document();
+        document.setId(1L);
+        document.setName("Test");
+        document.setDescription("Desc");
+        document.setContent("Content");
+
+        DocumentPermission permission = new DocumentPermission(
+                new DocumentPermissionId(1L, 1L),
+                document,
+                user,
+                DocumentRole.OWNER);
+
+        when(userRepository.findByUsername("testuser"))
+                .thenReturn(Optional.of(user));
+        when(documentPermissionRepository.findByUser_IdAndRole(1L, DocumentRole.OWNER))
+                .thenReturn(List.of(permission));
+        when(documentRepository.findAllById(List.of(1L)))
+                .thenReturn(List.of(document));
+        when(mapper.toDocumentMinimalResponseDto(document))
+                .thenReturn(new DocumentMinimalResponseDto(1L, "Test"));
+
+        List<DocumentMinimalResponseDto> result = documentService.getDocumentsOwnedByUsername("testuser");
+
+        assertEquals(1, result.size());
+        assertEquals(new DocumentMinimalResponseDto(1L, "Test"), result.get(0));
     }
+
+    @Test
+    public void getDocumentsOwnedByUserId() {
+        User user = new User();
+        user.setId(1L);
+
+        Document document = new Document();
+        document.setId(1L);
+        document.setName("Test");
+        document.setDescription("Desc");
+        document.setContent("Content");
+
+        DocumentPermission permission = new DocumentPermission(
+                new DocumentPermissionId(1L, 1L),
+                document,
+                user,
+                DocumentRole.OWNER);
+
+        when(documentPermissionRepository.findByUser_IdAndRole(1L, DocumentRole.OWNER))
+                .thenReturn(List.of(permission));
+        when(documentRepository.findAllById(List.of(1L)))
+                .thenReturn(List.of(document));
+        when(mapper.toDocumentMinimalResponseDto(document))
+                .thenReturn(new DocumentMinimalResponseDto(1L, "Test"));
+
+        List<DocumentMinimalResponseDto> result = documentService.getDocumentsOwnedByUserId(1L);
+
+        assertEquals(1, result.size());
+        assertEquals(new DocumentMinimalResponseDto(1L, "Test"), result.get(0));
+    }
+
+    @Test
+    public void testGetDocumentsByCollaboratorId() {
+        Long userId = 1L;
+
+        User user = new User();
+        user.setId(userId);
+
+        Document document = new Document();
+        document.setId(2L);
+        document.setName("Doc Name");
+        document.setDescription("Doc Description");
+        document.setContent("Doc Content");
+
+        DocumentPermission permission = new DocumentPermission(
+                new DocumentPermissionId(userId, 2L),
+                document,
+                user,
+                DocumentRole.VIEWER);
+
+        when(documentPermissionRepository.findByUser_IdAndRoleIn(userId,
+                List.of(DocumentRole.VIEWER, DocumentRole.EDITOR)))
+                .thenReturn(List.of(permission));
+
+        when(documentRepository.findAllById(List.of(2L)))
+                .thenReturn(List.of(document));
+
+        when(mapper.toDocumentMinimalResponseDto(document))
+                .thenReturn(new DocumentMinimalResponseDto(2L, "Doc Name"));
+
+        List<DocumentMinimalResponseDto> result = documentService.getDocumentsByCollaboratorId(userId);
+
+        assertEquals(1, result.size());
+        DocumentMinimalResponseDto dto = result.get(0);
+        assertEquals(2L, dto.id());
+        assertEquals("Doc Name", dto.name());
+    }
+
 }
