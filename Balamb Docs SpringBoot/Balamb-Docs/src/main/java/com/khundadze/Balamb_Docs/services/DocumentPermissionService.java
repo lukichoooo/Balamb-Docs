@@ -34,6 +34,10 @@ public class DocumentPermissionService {
     private final IUserRepository userRepository;
     private final DocumentPermissionMapper mapper;
 
+    public boolean isCurrentUserAllowedToEditDocument(Long documentId) throws AccessDeniedException {
+        return assertEditorOrOwner(documentId);
+    }
+
     public List<DocumentPermissionUserRoleDto> getRolesByDocumentId(Long documentId) {
         List<DocumentPermission> permissions = documentPermissionRepository.findByDocument_Id(documentId);
         return permissions.stream().map(mapper::toDto).toList();
@@ -131,6 +135,25 @@ public class DocumentPermissionService {
     }
 
     // helper methods
+    private boolean assertEditorOrOwner(Long documentId) throws AccessDeniedException {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long userId = ((User) principal).getId();
+
+        if (userId == null) {
+            throw new AccessDeniedException("Unauthorized");
+        }
+
+        DocumentRole role = documentPermissionRepository
+                .findByDocument_IdAndUser_Id(documentId, userId)
+                .orElseThrow(() -> new AccessDeniedException("No permission"))
+                .getRole();
+
+        if (role != DocumentRole.OWNER && role != DocumentRole.EDITOR) {
+            return false;
+        }
+        return true;
+    }
+
     private void checkOwnerPermission(Long documentId) throws AccessDeniedException {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String currentUsername = (principal instanceof UserDetails)

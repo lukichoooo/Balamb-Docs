@@ -4,20 +4,20 @@ import About from "./pages/About";
 import BrowseDocumentsPage from "./pages/BrowseDocumentsPage";
 import DocumentPage from "./pages/DocumentPage";
 import LoginPage from './pages/LoginPage';
-import DashboardComponent from './auth/DashboardComponent';
 import RequireAuth from './auth/RequireAuth';
 import NavbarWrapper from './pages/NavbarWrapper.tsx';
 import RegisterPage from './pages/RegisterPage';
 import UserProfile from "./pages/UserProfile.tsx";
+import NotFoundPage from "./pages/NotFoundPage";
 
 export default function App() {
   return (
     <Routes>
-      {/* Public routes */}
+      {/* Public */}
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterPage />} />
 
-      {/* Protected routes with navbar */}
+      {/* Protected */}
       <Route element={<RequireAuth />}>
         <Route element={<NavbarWrapper />}>
           <Route path="/" element={<Home />} />
@@ -26,9 +26,12 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="/documents" element={<BrowseDocumentsPage />} />
           <Route path="/documents/:id" element={<DocumentPage />} />
-          <Route path="/dashboard" element={<DashboardComponent />} />
         </Route>
       </Route>
+
+      {/* 404 Page Not Found */}
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
+
   );
 }

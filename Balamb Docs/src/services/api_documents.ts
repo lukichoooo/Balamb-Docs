@@ -1,13 +1,20 @@
 import axiosInstance from "./axiosInstance";
 import type { DocumentResponseDto, DocumentMinimalResponseDto, DocumentRequestDto } from "../types";
 
-export async function fetchDocumentsByid(id: number): Promise<DocumentResponseDto> {
+export async function fetchDocumentByid(id: number): Promise<DocumentResponseDto> {
     const res = await axiosInstance.get(`/documents/findById/${id}`);
     return res.data;
 }
 
-export async function updateContentById(id: number, content: string): Promise<DocumentResponseDto> { // TODO only user with permission can save
+export async function updateContentById(id: number, content: string): Promise<DocumentResponseDto> {
     const res = await axiosInstance.put(`/documents/updateContentById/${id}`, content, {
+        headers: { "Content-Type": "text/plain" }
+    });
+    return res.data;
+}
+
+export async function updateDescriptionById(id: number, description: string): Promise<DocumentResponseDto> {
+    const res = await axiosInstance.put(`/documents/updateDescriptionById/${id}`, description, {
         headers: { "Content-Type": "text/plain" }
     });
     return res.data;
@@ -51,3 +58,4 @@ export async function fetchDocumentsByCollaboratorId(id: number): Promise<Docume
 export async function deleteDocumentById(id: number): Promise<void> {
     await axiosInstance.delete(`/documents/deleteById/${id}`);
 }
+

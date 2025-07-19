@@ -38,3 +38,8 @@ export async function updateDocumentPermission( // finished
 export async function deleteDocumentPermission(documentId: number, username: string): Promise<void> { // finished
     await axiosInstance.delete(`/documentPermissions/deleteDocumentPermission/${documentId}/${username}`);
 }
+
+export async function isCurrentUserAllowedToEditDocument(documentId: number): Promise<boolean> {
+    const res = await axiosInstance.get(`/documentPermissions/isCurrentUserAllowedToEditDocument/${documentId}`);
+    return res.data;
+}

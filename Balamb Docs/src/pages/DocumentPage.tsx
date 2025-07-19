@@ -3,9 +3,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react"
 import type { DocumentResponseDto } from "../types"
 import Document from "../components/Document";
-import { fetchDocumentsByid, updateContentById, deleteDocumentById } from "../services/api_documents";
+import { fetchDocumentByid, updateContentById, deleteDocumentById, updateDescriptionById } from "../services/api_documents";
 
 import DocumentPermissionsButton from "../components/DocumentPermissionsButton";
+import { isCurrentUserAllowedToEditDocument } from "../services/api_documentPermissions";
 
 export default function DocumentPage() {
     const params = useParams();
@@ -18,12 +19,16 @@ export default function DocumentPage() {
         content: "Document Content"
     });
 
+    const [canEdit, setCanEdit] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
+    const [isEditingDescription, setIsEditingDescription] = useState(false);
+    const [descriptionInput, setDescriptionInput] = useState(document.description);
+
     const navigate = useNavigate();
 
 
     useEffect(() => {
-        fetchDocumentsByid(id)
+        fetchDocumentByid(id)
             .then((data: DocumentResponseDto) => setDocument(data))
             .catch(() => setDocument({
                 id: -1,
@@ -31,6 +36,7 @@ export default function DocumentPage() {
                 description: "Failed to load",
                 content: "Failed to load"
             }));
+        isCurrentUserAllowedToEditDocument(id).then(() => setCanEdit(true));
     }, [id]);
 
     function handleContentChange(value: string) {
@@ -82,28 +88,62 @@ export default function DocumentPage() {
         setIsEditing(false);
     }
 
+    function updateDescription() {
+        setIsEditingDescription(true);
+    }
+
+    function handleDescriptionSave() {
+        updateDescriptionById(id, descriptionInput)
+            .then(() => {
+                setDocument((prev) => ({ ...prev, description: descriptionInput }));
+                setIsEditingDescription(false);
+                alert("Description updated successfully");
+            })
+            .catch(() => alert("Failed to update description"));
+    }
+
+
+
     return (
         <div className={styles.documentPage}>
             <div className={styles.buttons}>
 
-
-                <button>Save Document</button>
+                <button onClick={handleSave}>Save Changes</button>
 
                 {!isEditing && (
                     <>
-                        <button onClick={handleEdit}>Edit</button>
-                        <button onClick={handleSave}>Save Changes</button>
+                        {canEdit && <button onClick={handleEdit}>Edit</button>}
                         <button onClick={handleShare}>Share</button>
                         <button onClick={handleDelete}>Delete</button>
                         <DocumentPermissionsButton />
                     </>
                 )}
-
                 {isEditing && (
                     <>
                         <button onClick={handleExitEditing}>Exit Editing</button>
+                        <button onClick={updateDescription}>Update Description</button>
                     </>
                 )}
+
+                {isEditingDescription && (
+                    <div className={styles.overlay}>
+                        <div className={styles.menu}>
+                            <button className={styles.closeButton} onClick={() => setIsEditingDescription(false)}>&times;</button>
+                            <h2>Edit Description</h2>
+                            <textarea
+                                className={styles.descriptionInput}
+                                value={descriptionInput}
+                                onChange={(e) => setDescriptionInput(e.target.value)}
+                                placeholder="Type your new description..."
+                            />
+                            <div className={styles.buttonRow}>
+                                <button onClick={handleDescriptionSave} className={styles.saveButton}>Save</button>
+                                <button onClick={() => setIsEditingDescription(false)} className={styles.cancelButton}>Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
 
             </div>
             <h1>{document.name}</h1>

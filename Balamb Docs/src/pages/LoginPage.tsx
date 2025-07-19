@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import AuthService from '../services/AuthService';
 import styles from '../styleModules/AuthPage.module.css';
@@ -19,7 +19,7 @@ const LoginPage = () => {
             if (response.token !== 'Invalid credentials') {
                 localStorage.setItem('token', response.token);
                 setIsLoggedIn(true);
-                navigate('/dashboard');
+                navigate(`/profile/${localStorage.getItem("id")}`);
                 localStorage.setItem("username", username);
                 localStorage.setItem("id", (await findByUsername(username)).id.toString());
             } else {

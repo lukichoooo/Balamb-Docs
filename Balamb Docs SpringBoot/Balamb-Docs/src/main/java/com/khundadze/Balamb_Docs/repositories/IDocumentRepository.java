@@ -16,39 +16,46 @@ import jakarta.transaction.Transactional;
 
 public interface IDocumentRepository extends JpaRepository<Document, Long> {
 
-    Optional<Document> findByName(String name);
+        Optional<Document> findByName(String name);
 
-    List<Document> findTop10ByNameStartsWithIgnoreCase(String name);
+        List<Document> findTop10ByNameStartsWithIgnoreCase(String name);
 
-    Page<Document> findAll(Pageable pageable);
+        Page<Document> findAll(Pageable pageable);
 
-    @Modifying
-    @Transactional
-    @Query("DELETE FROM Document d WHERE d.id = :id")
-    void deleteById(@Param("id") Long id);
+        @Modifying
+        @Transactional
+        @Query("DELETE FROM Document d WHERE d.id = :id")
+        void deleteById(@Param("id") Long id);
 
-    @Modifying
-    @Transactional
-    @Query("UPDATE Document d SET d.content = :content WHERE d.id = :id")
-    int updateContentById(
-            @Param("id") Long id,
-            @Param("content") String content);
+        @Modifying
+        @Transactional
+        @Query("UPDATE Document d SET d.content = :content WHERE d.id = :id")
+        int updateContentById(
+                        @Param("id") Long id,
+                        @Param("content") String content);
 
-    Page<Document> findAllByIdIn(List<Long> ids, Pageable pageable);
+        @Modifying
+        @Transactional
+        @Query("UPDATE Document d SET d.description = :description WHERE d.id = :id")
+        int updateDescriptionById(
+                        @Param("id") Long id,
+                        @Param("description") String description);
 
-    // Optional: search by name with paging
-    Page<Document> findByNameStartsWithIgnoreCase(String name, Pageable pageable);
+        Page<Document> findAllByIdIn(List<Long> ids, Pageable pageable);
 
-    // Optional: search by description with paging
-    Page<Document> findByDescriptionStartsWithIgnoreCase(String description, Pageable pageable);
+        // Optional: search by name with paging
+        Page<Document> findByNameStartsWithIgnoreCase(String name, Pageable pageable);
 
-    // Optional: search by content with paging
-    Page<Document> findByContentStartsWithIgnoreCase(String content, Pageable pageable);
+        // Optional: search by description with paging
+        Page<Document> findByDescriptionStartsWithIgnoreCase(String description, Pageable pageable);
 
-    // Optional: search by name, description, or content with paging
-    Page<Document> findByNameStartsWithIgnoreCaseOrDescriptionStartsWithIgnoreCaseOrContentStartsWithIgnoreCase(
-            String name,
-            String description,
-            String content,
-            Pageable pageable);
+        // Optional: search by content with paging
+        Page<Document> findByContentStartsWithIgnoreCase(String content, Pageable pageable);
+
+        // Optional: search by name, description, or content with paging
+        Page<Document> findByNameStartsWithIgnoreCaseOrDescriptionStartsWithIgnoreCaseOrContentStartsWithIgnoreCase(
+                        String name,
+                        String description,
+                        String content,
+                        Pageable pageable);
 }

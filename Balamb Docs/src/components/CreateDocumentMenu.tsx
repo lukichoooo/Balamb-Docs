@@ -2,9 +2,11 @@ import { useRef } from "react";
 import styles from "../styleModules/CreateDocumentMenu.module.css";
 import type { DocumentRequestDto } from "../types";
 import { saveDocument } from "../services/api_documents";
+import { useNavigate } from "react-router-dom";
 
 export default function CreateDocumentMenu({ onClose }: { onClose: () => void }) {
     const formRef = useRef<HTMLFormElement>(null);
+    const navigate = useNavigate();
 
     function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
@@ -17,7 +19,10 @@ export default function CreateDocumentMenu({ onClose }: { onClose: () => void })
         };
 
         saveDocument(data)
-            .then(() => onClose())
+            .then((response) => {
+                onClose();
+                navigate(`/documents/${response.id}`);
+            })
             .catch((err) => console.error(err));
     }
 

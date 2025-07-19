@@ -80,4 +80,9 @@ public class DocumentController {
         return documentService.getDocumentsByCollaboratorId(userId);
     }
 
+    @PutMapping("/updateDescriptionById/{id}")
+    public DocumentResponseDto updateDescriptionById(@PathVariable("id") Long id,
+            @RequestBody String description) throws AccessDeniedException {
+        return documentService.updateDescriptionById(id, description);
+    }
 }

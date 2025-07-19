@@ -70,4 +70,9 @@ public class DocumentPermissionController {
         documentPermissionService.deleteByDocumentIdAndUsername(documentId, username);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("isCurrentUserAllowedToEditDocument/{documentId}")
+    public boolean isCurrentUserAllowedToEditDocument(@PathVariable Long documentId) throws AccessDeniedException {
+        return documentPermissionService.isCurrentUserAllowedToEditDocument(documentId);
+    }
 }
