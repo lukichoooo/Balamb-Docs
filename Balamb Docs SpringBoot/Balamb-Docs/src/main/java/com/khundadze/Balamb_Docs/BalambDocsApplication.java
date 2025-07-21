@@ -59,6 +59,7 @@ public class BalambDocsApplication implements CommandLineRunner {
 				doc.setContent(faker.lorem().paragraph(5));
 				doc.setCreatedAt(LocalDateTime.now());
 				doc.setUpdatedAt(LocalDateTime.now());
+				doc.setPublic(j % 3 == 0);
 				documentRepository.save(doc);
 
 				// Give user OWNER permission

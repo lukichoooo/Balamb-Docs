@@ -20,12 +20,8 @@ public interface IDocumentRepository extends JpaRepository<Document, Long> {
 
         List<Document> findTop10ByNameStartsWithIgnoreCase(String name);
 
+        @Override
         Page<Document> findAll(Pageable pageable);
-
-        @Modifying
-        @Transactional
-        @Query("DELETE FROM Document d WHERE d.id = :id")
-        void deleteById(@Param("id") Long id);
 
         @Modifying
         @Transactional
@@ -33,6 +29,16 @@ public interface IDocumentRepository extends JpaRepository<Document, Long> {
         int updateContentById(
                         @Param("id") Long id,
                         @Param("content") String content);
+
+        @Modifying
+        @Transactional
+        @Query("UPDATE Document d SET d.name = :name WHERE d.id = :id")
+        int updateNameById(
+                        @Param("id") Long id,
+                        @Param("name") String name);
+
+        @Override
+        Optional<Document> findById(Long id);
 
         @Modifying
         @Transactional

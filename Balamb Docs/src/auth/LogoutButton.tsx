@@ -1,9 +1,12 @@
+import { useNavigate } from "react-router-dom";
 import AuthService from "../services/AuthService";
 
 function LogoutButton() {
+    const navigate = useNavigate();
+
     const handleLogout = () => {
         AuthService.logout();
-        window.location.href = "/login";
+        navigate("/login");
     };
 
     return (

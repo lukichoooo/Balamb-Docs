@@ -7,6 +7,7 @@ export type User = {
 export type DocumentMinimalResponseDto = {
     id: number;
     name: string;
+    isPublic: boolean;
 }
 
 export type DocumentResponseDto = {
@@ -14,12 +15,21 @@ export type DocumentResponseDto = {
     name: string;
     description: string;
     content: string;
+    isPublic: boolean;
 }
 
 export type DocumentRequestDto = {
     name: string;
     description: string;
     content: string;
+    isPublic: boolean;
+}
+
+export type DocumentMediumResponseDto = {
+    id: number,
+    name: string,
+    description: string,
+    isPublic: boolean
 }
 
 export type DocumentRole = "OWNER" | "EDITOR" | "VIEWER";

@@ -1,5 +1,5 @@
 import axiosInstance from "./axiosInstance";
-import type { DocumentResponseDto, DocumentMinimalResponseDto, DocumentRequestDto } from "../types";
+import type { DocumentResponseDto, DocumentMinimalResponseDto, DocumentRequestDto, DocumentMediumResponseDto } from "../types";
 
 export async function fetchDocumentByid(id: number): Promise<DocumentResponseDto> {
     const res = await axiosInstance.get(`/documents/findById/${id}`);
@@ -25,7 +25,7 @@ export async function fetchDocumentById(id: number): Promise<DocumentResponseDto
     return res.data;
 }
 
-export async function fetchDocumentsPage(page: number): Promise<DocumentResponseDto[]> {
+export async function fetchDocumentsPage(page: number): Promise<DocumentMediumResponseDto[]> {
     const res = await axiosInstance.get(`/documents/getPage/${page}`);
     return res.data;
 }
@@ -59,3 +59,12 @@ export async function deleteDocumentById(id: number): Promise<void> {
     await axiosInstance.delete(`/documents/deleteById/${id}`);
 }
 
+export async function togglePublic(id: number): Promise<boolean> {
+    const res = await axiosInstance.put(`/documents/togglePublic/${id}`);
+    return res.data;
+}
+
+export async function isCurrentUserAllowedToViewDocument(id: number): Promise<boolean> {
+    const res = await axiosInstance.get(`/documents/isCurrentUserAllowedToViewDocument/${id}`);
+    return res.data;
+}

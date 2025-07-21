@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.khundadze.Balamb_Docs.dtos.DocumentMediumResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentMinimalResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentRequestDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentResponseDto;
@@ -35,12 +36,12 @@ public class DocumentController {
     }
 
     @GetMapping("/findById/{id}")
-    public DocumentResponseDto findById(@PathVariable("id") Long id) {
+    public DocumentResponseDto findById(@PathVariable("id") Long id) throws AccessDeniedException {
         return documentService.findById(id);
     }
 
     @GetMapping("/findByName/{name}")
-    public DocumentResponseDto findByName(@PathVariable("name") String name) {
+    public DocumentResponseDto findByName(@PathVariable("name") String name) throws AccessDeniedException {
         return documentService.findByName(name);
     }
 
@@ -50,7 +51,7 @@ public class DocumentController {
     }
 
     @GetMapping("/getPage/{pageNumber}")
-    public List<DocumentResponseDto> getPage(@PathVariable("pageNumber") int pageNumber) {
+    public List<DocumentMediumResponseDto> getPage(@PathVariable("pageNumber") int pageNumber) {
         return documentService.getPage(pageNumber);
     }
 
@@ -84,5 +85,15 @@ public class DocumentController {
     public DocumentResponseDto updateDescriptionById(@PathVariable("id") Long id,
             @RequestBody String description) throws AccessDeniedException {
         return documentService.updateDescriptionById(id, description);
+    }
+
+    @PutMapping("/togglePublic/{id}")
+    public Boolean togglePublic(@PathVariable("id") Long id) throws AccessDeniedException {
+        return documentService.togglePublic(id);
+    }
+
+    @GetMapping("/isCurrentUserAllowedToViewDocument/{id}")
+    public Boolean isCurrentUserAllowedToViewDocument(@PathVariable("id") Long id) throws AccessDeniedException {
+        return documentService.isCurrentUserAllowedToViewDocument(id);
     }
 }

@@ -53,6 +53,9 @@ public class Document {
     @Lob
     private String content;
 
+    @Column(nullable = false)
+    private boolean isPublic = false;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DocumentPermission> permissions;

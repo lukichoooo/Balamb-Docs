@@ -1,5 +1,6 @@
 package com.khundadze.DocumentTest;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -11,6 +12,7 @@ import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
 import com.khundadze.Balamb_Docs.controllers.DocumentController;
+import com.khundadze.Balamb_Docs.dtos.DocumentMediumResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentMinimalResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentRequestDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentResponseDto;
@@ -31,19 +33,19 @@ public class DocumentControllerTest {
 
     @Test
     public void save() {
-        DocumentRequestDto requestDto = new DocumentRequestDto("name", "description", "content");
+        DocumentRequestDto requestDto = new DocumentRequestDto("name", "description", "content", false);
 
-        when(service.save(requestDto)).thenReturn(new DocumentResponseDto(1L, "name", "description", "content"));
+        when(service.save(requestDto)).thenReturn(new DocumentResponseDto(1L, "name", "description", "content", false));
 
-        DocumentResponseDto expected = new DocumentResponseDto(1L, "name", "description", "content");
+        DocumentResponseDto expected = new DocumentResponseDto(1L, "name", "description", "content", false);
         DocumentResponseDto result = controller.save(requestDto);
         assertEquals(expected, result);
     }
 
     @Test
-    public void findById() {
+    public void findById() throws AccessDeniedException {
         Long id = 1L;
-        DocumentResponseDto expected = new DocumentResponseDto(1L, "name", "description", "content");
+        DocumentResponseDto expected = new DocumentResponseDto(1L, "name", "description", "content", false);
         when(service.findById(id)).thenReturn(expected);
         DocumentResponseDto result = controller.findById(id);
         assertEquals(expected, result);
@@ -52,7 +54,7 @@ public class DocumentControllerTest {
     @Test
     public void findByNameLike() {
         String name = "name";
-        DocumentMinimalResponseDto expected = new DocumentMinimalResponseDto(1L, "name");
+        DocumentMinimalResponseDto expected = new DocumentMinimalResponseDto(1L, "name", false);
         when(service.findByNameLike(name)).thenReturn(List.of(expected));
         List<DocumentMinimalResponseDto> result = controller.findByNameLike(name);
         assertEquals(List.of(expected), result);
@@ -61,9 +63,9 @@ public class DocumentControllerTest {
     @Test
     public void getPage() {
         int pageNumber = 1;
-        DocumentResponseDto expected = new DocumentResponseDto(1L, "name", "description", "content");
+        DocumentMediumResponseDto expected = new DocumentMediumResponseDto(1L, "name", "description", false);
         when(service.getPage(pageNumber)).thenReturn(List.of(expected));
-        List<DocumentResponseDto> result = controller.getPage(pageNumber);
+        List<DocumentMediumResponseDto> result = controller.getPage(pageNumber);
         assertEquals(List.of(expected), result);
     }
 }

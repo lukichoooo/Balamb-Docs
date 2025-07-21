@@ -8,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.khundadze.Balamb_Docs.dtos.DocumentMediumResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentMinimalResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentRequestDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentResponseDto;
@@ -26,12 +27,11 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class DocumentService { // TODO: add private / public documents
+public class DocumentService {
 
         private final DocumentMapper mapper;
         private final IDocumentRepository documentRepository;
         private final IUserRepository userRepository;
-        private final DocumentPermissionService documentPermissionService;
         private final IDocumentPermissionRepository documentPermissionRepository;
 
         public DocumentResponseDto save(DocumentRequestDto requestDocument) {
@@ -55,17 +55,30 @@ public class DocumentService { // TODO: add private / public documents
                 return mapper.toDocumentResponseDto(savedDocument);
         }
 
-        public DocumentResponseDto findById(Long id) {
+        public DocumentResponseDto findById(Long id) throws AccessDeniedException {
+
                 Document document = documentRepository.findById(id)
                                 .orElseThrow(() -> new DocumentNotFoundException("Document not found with id: " + id));
+
+                if (document.isPublic()) {
+                        return mapper.toDocumentResponseDto(document);
+                }
+
+                assertViewerRole(id);
 
                 return mapper.toDocumentResponseDto(document);
         }
 
-        public DocumentResponseDto findByName(String name) {
+        public DocumentResponseDto findByName(String name) throws AccessDeniedException {
                 Document document = documentRepository.findByName(name)
                                 .orElseThrow(() -> new DocumentNotFoundException(
                                                 "Document not found with name: " + name));
+
+                if (document.isPublic()) {
+                        return mapper.toDocumentResponseDto(document);
+                }
+
+                assertViewerRole(document.getId());
 
                 return mapper.toDocumentResponseDto(document);
         }
@@ -81,21 +94,16 @@ public class DocumentService { // TODO: add private / public documents
                                 .toList();
         }
 
-        public List<DocumentResponseDto> getPage(int pageNumber) {
+        public List<DocumentMediumResponseDto> getPage(int pageNumber) {
                 Page<Document> page = documentRepository.findAll(PageRequest.of(pageNumber, 12));
 
                 return page.getContent().stream()
-                                .map(mapper::toDocumentResponseDto)
+                                .map(mapper::toDocumentMediumResponseDto)
                                 .toList();
         }
 
         public void deleteById(Long id) throws AccessDeniedException {
-                String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
-                User user = userRepository.findByUsername(username)
-                                .orElseThrow(() -> new UserNotFoundException("User not found"));
-
-                assertOwner(id, user.getId());
+                assertOwner(id);
 
                 // delete asociated roles
                 documentPermissionRepository.deleteAllByDocumentId(id);
@@ -104,12 +112,7 @@ public class DocumentService { // TODO: add private / public documents
         }
 
         public DocumentResponseDto updateContentById(Long id, String content) throws AccessDeniedException {
-                String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
-                User user = userRepository.findByUsername(username)
-                                .orElseThrow(() -> new UserNotFoundException("User not found"));
-
-                assertEditorOrOwner(id, user.getId());
+                assertEditorRole(id);
 
                 documentRepository.updateContentById(id, content);
                 return findById(id);
@@ -182,38 +185,60 @@ public class DocumentService { // TODO: add private / public documents
         }
 
         public DocumentResponseDto updateDescriptionById(Long id, String description) throws AccessDeniedException {
-                String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
-                User user = userRepository.findByUsername(username)
-                                .orElseThrow(() -> new UserNotFoundException("User not found"));
-
-                assertEditorOrOwner(id, user.getId());
+                assertEditorRole(id);
 
                 documentRepository.updateDescriptionById(id, description);
                 return findById(id);
         }
 
-        // helper methods
-        private void assertEditorOrOwner(Long documentId, Long userId) throws AccessDeniedException {
-                DocumentRole role = documentPermissionRepository
-                                .findByDocument_IdAndUser_Id(documentId, userId)
-                                .orElseThrow(() -> new AccessDeniedException("No permission"))
-                                .getRole();
+        public boolean togglePublic(Long id) throws AccessDeniedException {
+                assertOwner(id);
 
-                if (role != DocumentRole.OWNER && role != DocumentRole.EDITOR) {
-                        throw new AccessDeniedException("Forbidden");
-                }
+                Document document = documentRepository.findById(id)
+                                .orElseThrow(() -> new DocumentNotFoundException("Document not found"));
+
+                document.setPublic(!document.isPublic());
+                documentRepository.save(document);
+                return document.isPublic();
         }
 
-        private void assertOwner(Long documentId, Long userId) throws AccessDeniedException {
-                DocumentRole role = documentPermissionRepository
+        public boolean isCurrentUserAllowedToViewDocument(Long id) throws AccessDeniedException {
+                Document document = documentRepository.findById(id)
+                                .orElseThrow(() -> new DocumentNotFoundException("Document not found"));
+                if (document.isPublic())
+                        return true;
+
+                assertViewerRole(id);
+                return true;
+        }
+
+        // helper methods
+        private void assertOwner(Long documentId) throws AccessDeniedException {
+                if (getUserRole(documentId) != DocumentRole.OWNER)
+                        throw new AccessDeniedException("Forbidden");
+        }
+
+        private void assertEditorRole(Long documentId) throws AccessDeniedException {
+                DocumentRole role = getUserRole(documentId);
+                if (role != DocumentRole.OWNER && role != DocumentRole.EDITOR)
+                        throw new AccessDeniedException("Forbidden");
+        }
+
+        private void assertViewerRole(Long documentId) throws AccessDeniedException {
+                DocumentRole role = getUserRole(documentId);
+                if (role != DocumentRole.OWNER && role != DocumentRole.EDITOR && role != DocumentRole.VIEWER)
+                        throw new AccessDeniedException("Forbidden");
+        }
+
+        private DocumentRole getUserRole(Long documentId) throws AccessDeniedException {
+                String username = SecurityContextHolder.getContext().getAuthentication().getName();
+                User user = userRepository.findByUsername(username)
+                                .orElseThrow(() -> new UserNotFoundException("User not found"));
+                Long userId = user.getId();
+                return documentPermissionRepository
                                 .findByDocument_IdAndUser_Id(documentId, userId)
                                 .orElseThrow(() -> new AccessDeniedException("No permission"))
                                 .getRole();
-
-                if (role != DocumentRole.OWNER) {
-                        throw new AccessDeniedException("Forbidden");
-                }
         }
 
 }

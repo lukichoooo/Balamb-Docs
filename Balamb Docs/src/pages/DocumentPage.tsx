@@ -3,12 +3,12 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react"
 import type { DocumentResponseDto } from "../types"
 import Document from "../components/Document";
-import { fetchDocumentByid, updateContentById, deleteDocumentById, updateDescriptionById } from "../services/api_documents";
+import { fetchDocumentByid, updateContentById, deleteDocumentById, updateDescriptionById, togglePublic } from "../services/api_documents";
 
 import DocumentPermissionsButton from "../components/DocumentPermissionsButton";
 import { isCurrentUserAllowedToEditDocument } from "../services/api_documentPermissions";
 
-export default function DocumentPage() {
+export default function DocumentPage() { // TODO: add private / public documents
     const params = useParams();
     const id = Number(params.id);
 
@@ -16,7 +16,8 @@ export default function DocumentPage() {
         id: 0,
         name: "Untitled Document",
         description: "Default description",
-        content: "Document Content"
+        content: "Document Content",
+        isPublic: false
     });
 
     const [canEdit, setCanEdit] = useState(false);
@@ -34,7 +35,8 @@ export default function DocumentPage() {
                 id: -1,
                 name: "Error",
                 description: "Failed to load",
-                content: "Failed to load"
+                content: "Failed to load",
+                isPublic: false
             }));
         isCurrentUserAllowedToEditDocument(id).then(() => setCanEdit(true));
     }, [id]);
@@ -59,7 +61,13 @@ export default function DocumentPage() {
     function handleDelete() {
         deleteDocumentById(id)
             .then(() => {
-                setDocument({ id: -1, name: "", description: "", content: "" });
+                setDocument({
+                    id: -1,
+                    name: "",
+                    description: "",
+                    content: "",
+                    isPublic: false
+                });
                 setIsEditing(false);
                 navigator.clipboard.writeText(window.location.href)
                     .then(() => alert("Removed The Document Successfully!"))
@@ -102,11 +110,36 @@ export default function DocumentPage() {
             .catch(() => alert("Failed to update description"));
     }
 
+    function handleTogglePublic() {
+        togglePublic(id)
+            .then(() => {
+                setDocument(prev => ({ ...prev, isPublic: !prev.isPublic }));
+            })
+            .catch(() => alert("Failed to toggle public (Only owner can change visibility)"));
+    }
 
 
     return (
         <div className={styles.documentPage}>
             <div className={styles.buttons}>
+
+                {canEdit && (
+                    <button
+                        onClick={handleTogglePublic}
+                        style={{
+                            backgroundColor: document.isPublic ? "green" : "red",
+                            color: "white",
+                            padding: "6px 12px",
+                            border: "none",
+                            borderRadius: "4px",
+                            cursor: "pointer",
+                            transition: "background-color 0.3s ease"
+                        }}
+                    >
+                        {document.isPublic ? "Public" : "Private"}
+                    </button>
+                )}
+
 
                 <button onClick={handleSave}>Save Changes</button>
 

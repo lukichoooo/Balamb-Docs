@@ -1,4 +1,5 @@
 .card {
+    position: relative;
     background-color: blueviolet;
     border: 1px solid #ccc;
     color: white;
@@ -10,9 +11,12 @@
     text-align: center;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     transition: box-shadow 0.3s ease, transform 0.2s ease;
-
 }
 
+.card>div:first-of-type {
+    padding-bottom: 40px;
+    /* reserve space for tag */
+}
 
 .card img {
     width: 70%;
@@ -25,4 +29,26 @@
     cursor: pointer;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
     transform: translateY(-3px);
+}
+
+.tags {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 8px;
+}
+
+.publicTag {
+    background-color: green;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.privateTag {
+    background-color: red;
+    padding: 4px 8px;
+    border-radius: 4px;
 }

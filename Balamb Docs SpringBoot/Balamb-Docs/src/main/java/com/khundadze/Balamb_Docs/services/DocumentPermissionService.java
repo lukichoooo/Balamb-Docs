@@ -64,7 +64,7 @@ public class DocumentPermissionService {
         Document document = documentRepository.findById(documentId)
                 .orElseThrow(() -> new DocumentNotFoundException("Document not found with id: " + documentId));
 
-        checkOwnerPermission(documentId);
+        assertOwner(documentId);
 
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
@@ -89,6 +89,8 @@ public class DocumentPermissionService {
     @Transactional
     public DocumentPermission updateDocumentPermission(Long documentId, String username, String role)
             throws AccessDeniedException {
+
+        assertEditorOrOwner(documentId);
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
 
@@ -112,7 +114,7 @@ public class DocumentPermissionService {
 
     @Transactional
     public void deleteByDocumentIdAndUsername(Long documentId, String username) throws AccessDeniedException {
-        checkOwnerPermission(documentId);
+        assertOwner(documentId);
 
         Optional<DocumentPermission> ownerPermissionOpt = documentPermissionRepository
                 .findByDocument_IdAndRole(documentId, DocumentRole.OWNER);
@@ -139,22 +141,18 @@ public class DocumentPermissionService {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long userId = ((User) principal).getId();
 
-        if (userId == null) {
+        if (userId == null)
             throw new AccessDeniedException("Unauthorized");
-        }
 
         DocumentRole role = documentPermissionRepository
                 .findByDocument_IdAndUser_Id(documentId, userId)
                 .orElseThrow(() -> new AccessDeniedException("No permission"))
                 .getRole();
 
-        if (role != DocumentRole.OWNER && role != DocumentRole.EDITOR) {
-            return false;
-        }
-        return true;
+        return role == DocumentRole.OWNER || role == DocumentRole.EDITOR;
     }
 
-    private void checkOwnerPermission(Long documentId) throws AccessDeniedException {
+    private void assertOwner(Long documentId) throws AccessDeniedException {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String currentUsername = (principal instanceof UserDetails)
                 ? ((UserDetails) principal).getUsername()

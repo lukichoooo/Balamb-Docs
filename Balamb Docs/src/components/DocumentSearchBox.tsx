@@ -2,13 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import styles from "../styleModules/UserSearchBox.module.css";
 import type { DocumentMinimalResponseDto } from "../types";
 import { fetchDocumentsByNameLike } from "../services/api_documents";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { isCurrentUserAllowedToViewDocument } from "../services/api_documents";
 
 export default function DocumentSearchBox() {
     const [searchInput, setSearchInput] = useState("");
     const [searchResult, setSearchResult] = useState<DocumentMinimalResponseDto[]>([]);
     const [showResults, setShowResults] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
+    const navigate = useNavigate();
 
     function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
         setSearchInput(e.target.value);
@@ -43,6 +45,18 @@ export default function DocumentSearchBox() {
 
     }, [searchInput]);
 
+    async function onMenuItemClick(id: number) {
+        try {
+            if (await isCurrentUserAllowedToViewDocument(id)) {
+                navigate(`/documents/${id}`);
+                return;
+            }
+        } catch (error) {
+            alert("You don't have permission to view this document");
+        }
+    }
+
+
     return (
         <div className={styles.searchContainer} ref={containerRef}>
             <input
@@ -56,11 +70,15 @@ export default function DocumentSearchBox() {
             {showResults && searchResult.length > 0 && (
                 <ul className={styles.dropdown}>
                     {searchResult.map(doc => (
-                        <Link key={doc.id} to={`/documents/${doc.id}`}>
-                            <li key={doc.id} className={styles.item}>
-                                {doc.name}
-                            </li>
-                        </Link>
+                        <li
+                            key={doc.id}
+                            className={styles.item}
+                            onClick={() => onMenuItemClick(doc.id)}
+                            tabIndex={0} // for keyboard accessibility
+                            role="button"
+                        >
+                            {doc.name}
+                        </li>
                     ))}
                 </ul>
             )}

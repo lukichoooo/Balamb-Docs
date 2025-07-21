@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import com.khundadze.Balamb_Docs.dtos.DocumentMinimalResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentRequestDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentResponseDto;
+import com.khundadze.Balamb_Docs.dtos.DocumentMediumResponseDto;
 import com.khundadze.Balamb_Docs.models.Document;
 import com.khundadze.Balamb_Docs.services.DocumentMapper;
 
@@ -38,8 +39,17 @@ public class DocumentMapperTest {
     }
 
     @Test
+    public void toDocumentMediumResponseDto() {
+        Document document = new Document("name", "description", "content");
+        DocumentMediumResponseDto mediumResponseDto = mapper.toDocumentMediumResponseDto(document);
+        assertEquals(document.getId(), mediumResponseDto.id());
+        assertEquals(document.getName(), mediumResponseDto.name());
+        assertEquals(document.getDescription(), mediumResponseDto.description());
+    }
+
+    @Test
     public void toDocument() {
-        DocumentRequestDto requestDto = new DocumentRequestDto("name", "description", "content");
+        DocumentRequestDto requestDto = new DocumentRequestDto("name", "description", "content", false);
         Document document = mapper.toDocument(requestDto);
         assertEquals(requestDto.name(), document.getName());
         assertEquals(requestDto.description(), document.getDescription());

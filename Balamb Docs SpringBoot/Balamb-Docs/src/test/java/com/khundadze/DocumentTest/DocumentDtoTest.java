@@ -14,7 +14,7 @@ public class DocumentDtoTest {
 
     @Test
     public void validDtoShouldPassValidation() {
-        DocumentRequestDto dto = new DocumentRequestDto("name", "description", "content");
+        DocumentRequestDto dto = new DocumentRequestDto("name", "description", "content", false);
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
         var violations = validator.validate(dto);
@@ -23,7 +23,7 @@ public class DocumentDtoTest {
 
     @Test
     public void invalidNameShouldFailValidation() {
-        DocumentRequestDto dto = new DocumentRequestDto("", "description", "content");
+        DocumentRequestDto dto = new DocumentRequestDto("", "description", "content", false);
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
         var violations = validator.validate(dto);
