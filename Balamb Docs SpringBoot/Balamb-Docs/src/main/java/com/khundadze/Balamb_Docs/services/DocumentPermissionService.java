@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import com.khundadze.Balamb_Docs.dtos.DocumentPermissionUserRoleDto;
@@ -35,7 +34,8 @@ public class DocumentPermissionService {
     private final DocumentPermissionMapper mapper;
 
     public boolean isCurrentUserAllowedToEditDocument(Long documentId) throws AccessDeniedException {
-        return assertEditorOrOwner(documentId);
+        assertEditorOrOwner(documentId);
+        return true;
     }
 
     public List<DocumentPermissionUserRoleDto> getRolesByDocumentId(Long documentId) {
@@ -61,13 +61,14 @@ public class DocumentPermissionService {
 
     public DocumentPermission createDocumentPermission(Long documentId, String username, String role)
             throws AccessDeniedException {
+
         Document document = documentRepository.findById(documentId)
                 .orElseThrow(() -> new DocumentNotFoundException("Document not found with id: " + documentId));
 
-        assertOwner(documentId);
-
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
+
+        assertOwner(documentId);
 
         DocumentPermissionId id = new DocumentPermissionId(documentId, user.getId());
 
@@ -90,9 +91,13 @@ public class DocumentPermissionService {
     public DocumentPermission updateDocumentPermission(Long documentId, String username, String role)
             throws AccessDeniedException {
 
-        assertEditorOrOwner(documentId);
+        documentRepository.findById(documentId)
+                .orElseThrow(() -> new DocumentNotFoundException("Document not found with id: " + documentId));
+
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("User not found with username: " + username));
+
+        assertEditorOrOwner(documentId);
 
         DocumentPermission permission = getPermission(documentId, user.getId());
 
@@ -137,34 +142,25 @@ public class DocumentPermissionService {
     }
 
     // helper methods
-    private boolean assertEditorOrOwner(Long documentId) throws AccessDeniedException {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId = ((User) principal).getId();
-
-        if (userId == null)
-            throw new AccessDeniedException("Unauthorized");
-
-        DocumentRole role = documentPermissionRepository
-                .findByDocument_IdAndUser_Id(documentId, userId)
-                .orElseThrow(() -> new AccessDeniedException("No permission"))
-                .getRole();
-
-        return role == DocumentRole.OWNER || role == DocumentRole.EDITOR;
+    private void assertEditorOrOwner(Long documentId) throws AccessDeniedException {
+        DocumentRole role = getUserRole(documentId);
+        if (role != DocumentRole.OWNER && role != DocumentRole.EDITOR)
+            throw new AccessDeniedException("Forbidden");
     }
 
     private void assertOwner(Long documentId) throws AccessDeniedException {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String currentUsername = (principal instanceof UserDetails)
-                ? ((UserDetails) principal).getUsername()
-                : principal.toString();
-
-        Optional<DocumentPermission> ownerPermissionOpt = documentPermissionRepository
-                .findByDocument_IdAndRole(documentId, DocumentRole.OWNER);
-
-        if (ownerPermissionOpt.isEmpty() ||
-                !ownerPermissionOpt.get().getUser().getUsername().equals(currentUsername)) {
-            throw new AccessDeniedException("Only the owner can modify permissions for this document");
-        }
+        if (getUserRole(documentId) != DocumentRole.OWNER)
+            throw new AccessDeniedException("Forbidden");
     }
 
+    private DocumentRole getUserRole(Long documentId) throws AccessDeniedException {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+        Long userId = user.getId();
+        return documentPermissionRepository
+                .findByDocument_IdAndUser_Id(documentId, userId)
+                .orElseThrow(() -> new AccessDeniedException("No permission"))
+                .getRole();
+    }
 }

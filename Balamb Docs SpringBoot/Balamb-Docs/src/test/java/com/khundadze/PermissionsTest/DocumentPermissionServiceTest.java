@@ -323,9 +323,4 @@ public class DocumentPermissionServiceTest {
                 assertEquals("Cannot remove owner permission", ex.getMessage());
         }
 
-        @Test
-        public void viwerNotAllowedToChangePermissions() {
-                // TODO fix this bug
-        }
-
 }

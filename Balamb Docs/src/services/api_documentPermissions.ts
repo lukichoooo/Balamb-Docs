@@ -17,7 +17,7 @@ export async function getPermission(documentId: number, userId: number): Promise
     return res.data;
 }
 
-export async function createDocumentPermission( // finished
+export async function createDocumentPermission(
     documentId: number,
     username: string,
     role: string
@@ -26,7 +26,7 @@ export async function createDocumentPermission( // finished
     return res.data;
 }
 
-export async function updateDocumentPermission( // finished
+export async function updateDocumentPermission(
     documentId: number,
     username: string,
     role: string

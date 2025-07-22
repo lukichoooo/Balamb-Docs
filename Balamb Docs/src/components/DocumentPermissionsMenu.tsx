@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import type { DocumentPermissionUserRoleDto } from "../types";
 import { getRolesByDocumentId, createDocumentPermission, isCurrentUserAllowedToEditDocument } from "../services/api_documentPermissions";
-import PermissionsList from "./PermissionsList";
+import PermissionsList from "./DocumentPermissionsList";
 import EditPermissionForm from "./EditPermissionForm";
 
 interface DocumentPermissionsMenuProps {
@@ -24,7 +24,7 @@ export default function DocumentPermissionsMenu({ onClose }: DocumentPermissions
                 .catch((err) => console.error("Failed to fetch roles:", err));
         }
     }, [documentId]);
-
+    PermissionsList
     async function handleAddPermission(username: string, role: string) {
         try {
             await createDocumentPermission(documentId, username, role);
@@ -36,7 +36,7 @@ export default function DocumentPermissionsMenu({ onClose }: DocumentPermissions
         }
     }
 
-    async function handleEditButton() {
+    async function handleAddButton() {
         if (await isCurrentUserAllowedToEditDocument(documentId))
             setEditing(true);
         else
@@ -52,7 +52,7 @@ export default function DocumentPermissionsMenu({ onClose }: DocumentPermissions
                 {editing ? (
                     <EditPermissionForm onSave={handleAddPermission} onCancel={() => setEditing(false)} />
                 ) : (
-                    <button onClick={handleEditButton} className={styles.editButton}>Edit Permissions</button>
+                    <button onClick={handleAddButton} className={styles.editButton}>Add Permissions</button>
                 )}
             </div>
         </div>
