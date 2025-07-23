@@ -24,8 +24,12 @@ import com.khundadze.Balamb_Docs.repositories.IDocumentRepository;
 import com.khundadze.Balamb_Docs.repositories.IUserRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 @Service
+@Getter
+@Setter
 @RequiredArgsConstructor
 public class DocumentService {
 

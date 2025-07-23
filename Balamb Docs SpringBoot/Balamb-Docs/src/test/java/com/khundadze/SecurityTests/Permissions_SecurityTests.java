@@ -180,6 +180,8 @@ public class Permissions_SecurityTests {
                         user,
                         role)));
 
+        when(documentRepository.findById(1L)).thenReturn(Optional.of(new Document()));
+
         if (role == DocumentRole.OWNER) {
             when(documentPermissionRepository.findByDocument_IdAndRole(document.getId(), DocumentRole.OWNER))
                     .thenReturn(Optional.of(new DocumentPermission(
@@ -193,7 +195,7 @@ public class Permissions_SecurityTests {
                 .setAuthentication(new UsernamePasswordAuthenticationToken(user.getUsername(), null));
     }
 
-    // Specific helpers if you want named ones:
+    // Specific helpers:
     private void setViewer() {
         setupUserWithRole(DocumentRole.VIEWER);
     }
