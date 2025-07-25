@@ -36,9 +36,8 @@ export default function UserSearchBox() {
             findByUsernameLike(searchInput)
                 .then((data: User[]) => setSearchResult(data))
                 .catch(() => setSearchResult([]));
-        }, 500); // 500ms delay (adjust as you like)
+        }, 200);
 
-        // Cleanup if searchInput changes before the delay finishes
         return () => {
             clearTimeout(interval);
         };

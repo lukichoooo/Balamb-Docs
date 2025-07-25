@@ -2,6 +2,7 @@ package com.khundadze.Balamb_Docs.services;
 
 import org.springframework.stereotype.Service;
 
+import com.khundadze.Balamb_Docs.dtos.DocumentFullInfoResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentMediumResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentMinimalResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentRequestDto;
@@ -37,5 +38,13 @@ public class DocumentMapper {
         document.setContent(requestDto.content());
         document.setPublic(requestDto.isPublic());
         return document;
+    }
+
+    public DocumentFullInfoResponseDto toDocumentFullInfoResponseDto(Document document) {
+        return new DocumentFullInfoResponseDto(document.getId(),
+                document.getName(),
+                document.isPublic(),
+                document.getCreatedAt(),
+                document.getUpdatedAt());
     }
 }

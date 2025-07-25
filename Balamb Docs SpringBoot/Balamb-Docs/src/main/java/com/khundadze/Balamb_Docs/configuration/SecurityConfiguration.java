@@ -1,5 +1,6 @@
 package com.khundadze.Balamb_Docs.configuration;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -24,13 +25,16 @@ public class SecurityConfiguration {
 
     private final AuthenticationProvider authenticationProvider;
 
+    @Value("${frontend.url}")
+    private String frontendUrl;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .cors().and() // Enable CORS support
+                .cors().and()
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // allow all OPTIONS requests for CORS
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -46,9 +50,9 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("http://localhost:5173"); // your frontend origin
-        configuration.addAllowedMethod("*"); // allow all HTTP methods (GET, POST, OPTIONS, etc)
-        configuration.addAllowedHeader("*"); // allow all headers
+        configuration.addAllowedOrigin(frontendUrl);
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

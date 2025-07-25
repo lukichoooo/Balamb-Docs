@@ -1,0 +1,44 @@
+[33m7cb765e[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{0}: reset: moving to HEAD~2
+[33mfe83a4f[m HEAD@{1}: reset: moving to HEAD~2
+[33m95c4ddd[m[33m ([m[1;31morigin/main[m[33m)[m HEAD@{2}: commit: New replacement commit
+[33m619905b[m HEAD@{3}: reset: moving to HEAD~1
+[33m0c36c1a[m HEAD@{4}: commit (amend): deployment ready
+[33me473ec7[m HEAD@{5}: commit (amend): deployment ready
+[33m92c4eac[m HEAD@{6}: commit (amend): deployment ready
+[33m8fda399[m HEAD@{7}: commit: deployment ready
+[33m619905b[m HEAD@{8}: commit: deployment ready
+[33mfe83a4f[m HEAD@{9}: commit (amend): made paging proper and fixed few tests
+[33m0864ce1[m HEAD@{10}: commit (amend): made paging proper and fixed few tests
+[33mdb09375[m HEAD@{11}: commit (amend): made paging proper and fixed few tests
+[33mf115539[m HEAD@{12}: commit: made paging proper and fixed few tests
+[33m0b8a021[m HEAD@{13}: commit: document & profile info
+[33m7cb765e[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{14}: commit: improved loading styles
+[33meaeb1dd[m HEAD@{15}: commit: service_securityTests
+[33m667aefa[m HEAD@{16}: commit: fixed update doc permissions & added tests
+[33m2b4977d[m HEAD@{17}: commit: added document visibility
+[33mb06e86c[m HEAD@{18}: commit: improved document editing
+[33m8ae4d3c[m HEAD@{19}: commit: finished document permissions searching and profile page
+[33mfdeac15[m HEAD@{20}: commit: finished document Permissions
+[33m5b98b8c[m HEAD@{21}: commit: added DocumentPermissionsMenu
+[33me9b2261[m HEAD@{22}: commit: added documents permisions in back end
+[33m64486d0[m HEAD@{23}: commit: removed email from users
+[33mb44dce9[m HEAD@{24}: reset: moving to origin/main
+[33mb44dce9[m HEAD@{25}: reset: moving to HEAD
+[33mb44dce9[m HEAD@{26}: commit: added registration
+[33mbd9e87e[m HEAD@{27}: commit: finished log in / log out
+[33m521b97d[m HEAD@{28}: commit: JWT front & back end
+[33m8f35b08[m HEAD@{29}: commit: finished back end JWT security imp
+[33m08197db[m HEAD@{30}: commit: started adding JWT auth
+[33m154fb49[m HEAD@{31}: commit: started security impl
+[33m7398e3c[m HEAD@{32}: reset: moving to origin/main
+[33m7398e3c[m HEAD@{33}: commit: seperated API calls in react
+[33m67b5066[m HEAD@{34}: commit: added saving documents
+[33md7e516a[m HEAD@{35}: commit: document editing front end
+[33m24e5f2f[m HEAD@{36}: commit: pagination of documents
+[33mc3d8bbd[m HEAD@{37}: commit: fixed User username conflict
+[33mc28a06a[m HEAD@{38}: commit: added documents table
+[33m7feca0b[m HEAD@{39}: commit: added documents page stamp
+[33mb337e8f[m HEAD@{40}: commit: user testing & additional methods
+[33m794e6e2[m HEAD@{41}: commit: first working cors
+[33m11a0d3c[m HEAD@{42}: Branch: renamed refs/heads/master to refs/heads/main
+[33m11a0d3c[m HEAD@{44}: commit (initial): initial commit for backend and frontend

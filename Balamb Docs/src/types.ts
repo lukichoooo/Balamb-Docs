@@ -1,7 +1,7 @@
 export type User = {
     id: number;
     username: string;
-    email: string;
+    globalRole: string;
 };
 
 export type DocumentMinimalResponseDto = {
@@ -39,8 +39,31 @@ export type DocumentPermissionUserRoleDto = {
     role: DocumentRole;
 }
 
-export interface DocumentPermission {
+export type DocumentPermission = {
     documentId: number;
     userId: number;
     role: DocumentRole;
+}
+
+export type UserFullResponseDto = {
+    id: number;
+    username: string;
+    globalRole: string;
+    createdAt: Date;
+}
+
+export type DocumentFullInfoResponseDto = {
+    id: number;
+    name: string;
+    isPublic: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
+export type PageResponse<T> = {
+    items: T[];
+    pageNumber: number;
+    pageSize: number;
+    totalPages: number;
+    totalElements: number;
 }

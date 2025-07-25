@@ -1,5 +1,6 @@
 package com.khundadze.UserTest;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -16,6 +17,7 @@ import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.khundadze.Balamb_Docs.dtos.UserFullResponseDto;
 import com.khundadze.Balamb_Docs.dtos.UserMinimalResponseDto;
 import com.khundadze.Balamb_Docs.dtos.UserRequestDto;
 import com.khundadze.Balamb_Docs.dtos.UserResponseDto;
@@ -115,6 +117,29 @@ public class UserServiceTest {
         assertEquals(2, result.size());
         assertTrue(result.contains(responseDto1));
         assertTrue(result.contains(responseDto2));
+    }
+
+    @Test
+    public void findFullById() {
+        Long userId = 1L;
+        User user = new User();
+        user.setId(userId);
+        user.setUsername("Luka");
+        user.setCreatedAt(LocalDateTime.of(2023, 1, 1, 12, 0));
+        user.setGlobalRole(GlobalRole.USER);
+
+        UserFullResponseDto expectedDto = new UserFullResponseDto(
+                userId,
+                "Luka",
+                GlobalRole.USER,
+                LocalDateTime.of(2023, 1, 1, 12, 0));
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userMapper.toUserFullResponseDto(user)).thenReturn(expectedDto);
+
+        UserFullResponseDto actualDto = userService.findFullById(userId);
+
+        assertEquals(expectedDto, actualDto);
     }
 
 }

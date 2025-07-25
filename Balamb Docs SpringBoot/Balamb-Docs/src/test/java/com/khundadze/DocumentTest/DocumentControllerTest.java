@@ -16,6 +16,7 @@ import com.khundadze.Balamb_Docs.dtos.DocumentMediumResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentMinimalResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentRequestDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentResponseDto;
+import com.khundadze.Balamb_Docs.dtos.PageResponse;
 import com.khundadze.Balamb_Docs.services.DocumentService;
 
 public class DocumentControllerTest {
@@ -63,9 +64,26 @@ public class DocumentControllerTest {
     @Test
     public void getPage() {
         int pageNumber = 1;
-        DocumentMediumResponseDto expected = new DocumentMediumResponseDto(1L, "name", "description", false);
-        when(service.getPage(pageNumber)).thenReturn(List.of(expected));
-        List<DocumentMediumResponseDto> result = controller.getPage(pageNumber);
-        assertEquals(List.of(expected), result);
+
+        DocumentMediumResponseDto dto = new DocumentMediumResponseDto(1L, "name", "description", false);
+
+        PageResponse<DocumentMediumResponseDto> pageResponse = new PageResponse<>(
+                List.of(dto),
+                3, // totalPages
+                36L, // totalItems
+                pageNumber, // currentPage
+                12 // pageSize
+        );
+
+        when(service.getPage(pageNumber)).thenReturn(pageResponse);
+
+        PageResponse<DocumentMediumResponseDto> result = controller.getPage(pageNumber);
+
+        assertEquals(pageResponse, result);
+        assertEquals(1, result.currentPage());
+        assertEquals(3, result.totalPages());
+        assertEquals(36, result.totalItems());
+        assertEquals(List.of(dto), result.items());
     }
+
 }

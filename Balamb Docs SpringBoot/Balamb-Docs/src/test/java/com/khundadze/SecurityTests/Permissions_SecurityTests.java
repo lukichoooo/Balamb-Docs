@@ -7,6 +7,7 @@ import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
@@ -123,13 +124,62 @@ public class Permissions_SecurityTests {
     @Test
     public void changePermissionForNonExistentDocument_ShouldThrow() {
         setupUserWithRole(DocumentRole.OWNER);
-        User targetUser = createAndMockTargetViewer(2L, "targetUser");
+        createAndMockTargetViewer(2L, "targetUser");
 
         // documentRepository returns empty for document id
         when(documentRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThrows(DocumentNotFoundException.class,
                 () -> documentPermissionsService.updateDocumentPermission(999L, "targetUser", "EDITOR"));
+    }
+
+    @Test
+    public void createDocumentPermission_duplicate() {
+        setupUserWithRole(DocumentRole.OWNER); // the current user must be OWNER to create permissions
+
+        Document document = new Document();
+        document.setId(1L);
+
+        User targetUser = new User();
+        targetUser.setId(5L);
+        targetUser.setUsername("alice");
+
+        DocumentPermissionId id = new DocumentPermissionId(1L, 5L);
+
+        when(documentRepository.findById(1L)).thenReturn(Optional.of(document));
+        when(userRepository.findByUsername("alice")).thenReturn(Optional.of(targetUser));
+        when(documentPermissionRepository.existsById(id)).thenReturn(true);
+
+        assertThrows(
+                com.khundadze.Balamb_Docs.exceptions.DuplicatePermissionException.class,
+                () -> documentPermissionsService.createDocumentPermission(1L, "alice", "viewer"));
+    }
+
+    @Test
+    public void createDocumentPermission_success() throws Exception {
+        setupUserWithRole(DocumentRole.OWNER); // current user must be OWNER
+
+        Document document = new Document();
+        document.setId(1L);
+
+        User targetUser = new User();
+        targetUser.setId(5L);
+        targetUser.setUsername("bob");
+
+        DocumentPermissionId id = new DocumentPermissionId(1L, 5L);
+
+        when(documentRepository.findById(1L)).thenReturn(Optional.of(document));
+        when(userRepository.findByUsername("bob")).thenReturn(Optional.of(targetUser));
+        when(documentPermissionRepository.existsById(id)).thenReturn(false);
+
+        DocumentPermission newPermission = new DocumentPermission(id, document, targetUser, DocumentRole.VIEWER);
+        when(documentPermissionRepository.save(any())).thenReturn(newPermission);
+
+        DocumentPermission result = documentPermissionsService.createDocumentPermission(1L, "bob", "viewer");
+
+        assert (result != null);
+        assert (result.getRole() == DocumentRole.VIEWER);
+        assert (result.getUser().getId() == 5L);
     }
 
     // helper methods

@@ -1,5 +1,5 @@
 import axiosInstance from "./axiosInstance";
-import type { DocumentResponseDto, DocumentMinimalResponseDto, DocumentRequestDto, DocumentMediumResponseDto } from "../types";
+import type { DocumentResponseDto, DocumentMinimalResponseDto, DocumentRequestDto, DocumentMediumResponseDto, DocumentFullInfoResponseDto, PageResponse } from "../types";
 
 export async function fetchDocumentByid(id: number): Promise<DocumentResponseDto> {
     const res = await axiosInstance.get(`/documents/findById/${id}`);
@@ -25,7 +25,7 @@ export async function fetchDocumentById(id: number): Promise<DocumentResponseDto
     return res.data;
 }
 
-export async function fetchDocumentsPage(page: number): Promise<DocumentMediumResponseDto[]> {
+export async function fetchDocumentsPage(page: number): Promise<PageResponse<DocumentMediumResponseDto>> {
     const res = await axiosInstance.get(`/documents/getPage/${page}`);
     return res.data;
 }
@@ -66,5 +66,10 @@ export async function togglePublic(id: number): Promise<boolean> {
 
 export async function isCurrentUserAllowedToViewDocument(id: number): Promise<boolean> {
     const res = await axiosInstance.get(`/documents/isCurrentUserAllowedToViewDocument/${id}`);
+    return res.data;
+}
+
+export async function getDocumentFullInfo(id: number): Promise<DocumentFullInfoResponseDto> {
+    const res = await axiosInstance.get(`/documents/getDocumentFullInfo/${id}`);
     return res.data;
 }

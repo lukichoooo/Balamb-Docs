@@ -17,6 +17,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
@@ -27,6 +28,7 @@ import com.khundadze.Balamb_Docs.dtos.DocumentMediumResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentMinimalResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentRequestDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentResponseDto;
+import com.khundadze.Balamb_Docs.dtos.PageResponse;
 import com.khundadze.Balamb_Docs.exceptions.DocumentNotFoundException;
 import com.khundadze.Balamb_Docs.models.Document;
 import com.khundadze.Balamb_Docs.models.DocumentPermission;
@@ -175,16 +177,31 @@ public class DocumentServiceTest {
         @Test
         public void getPage() {
                 int pageNumber = 1;
+                int pageSize = 12;
+                long totalItems = 15; // example total items in DB
+                int expectedTotalPages = (int) Math.ceil((double) totalItems / pageSize); // 2 pages
+
                 DocumentMediumResponseDto responseDto = new DocumentMediumResponseDto(1L, "name", "description", false);
                 Document document = new Document("name", "description", "content");
 
-                when(documentRepository.findAll(PageRequest.of(pageNumber, 12)))
-                                .thenReturn(new PageImpl<>(List.of(document)));
+                // Mock repository returns a page with total 15 items, page size 12 => 2 pages total
+                Page<Document> page = new PageImpl<>(List.of(document), PageRequest.of(pageNumber - 1, pageSize),
+                                totalItems);
+
+                when(documentRepository.findAll(PageRequest.of(pageNumber - 1, pageSize)))
+                                .thenReturn(page);
                 when(mapper.toDocumentMediumResponseDto(document)).thenReturn(responseDto);
 
-                List<DocumentMediumResponseDto> result = documentService.getPage(pageNumber);
+                PageResponse<DocumentMediumResponseDto> result = documentService.getPage(pageNumber);
 
-                assertEquals(List.of(responseDto), result);
+                // Check list of items
+                assertEquals(List.of(responseDto), result.items());
+
+                // Check paging info
+                assertEquals(expectedTotalPages, result.totalPages(), "Total pages should be correct");
+                assertEquals(totalItems, result.totalItems(), "Total items should be correct");
+                assertEquals(pageNumber, result.currentPage(), "Current page should match requested page");
+                assertEquals(pageSize, result.pageSize(), "Page size should be correct");
         }
 
         @Test

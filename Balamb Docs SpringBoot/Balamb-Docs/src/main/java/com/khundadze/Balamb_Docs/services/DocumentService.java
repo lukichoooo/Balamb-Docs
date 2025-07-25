@@ -8,10 +8,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import com.khundadze.Balamb_Docs.dtos.DocumentFullInfoResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentMediumResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentMinimalResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentRequestDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentResponseDto;
+import com.khundadze.Balamb_Docs.dtos.PageResponse;
 import com.khundadze.Balamb_Docs.exceptions.DocumentNotFoundException;
 import com.khundadze.Balamb_Docs.exceptions.UserNotFoundException;
 import com.khundadze.Balamb_Docs.models.Document;
@@ -23,8 +25,8 @@ import com.khundadze.Balamb_Docs.repositories.IDocumentPermissionRepository;
 import com.khundadze.Balamb_Docs.repositories.IDocumentRepository;
 import com.khundadze.Balamb_Docs.repositories.IUserRepository;
 
-import lombok.RequiredArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Service
@@ -98,12 +100,21 @@ public class DocumentService {
                                 .toList();
         }
 
-        public List<DocumentMediumResponseDto> getPage(int pageNumber) {
-                Page<Document> page = documentRepository.findAll(PageRequest.of(pageNumber, 12));
+        public PageResponse<DocumentMediumResponseDto> getPage(int pageNumber) {
+                int pageSize = 12;
+                // Subtract 1 because Spring Data PageRequest is zero-based
+                Page<Document> page = documentRepository.findAll(PageRequest.of(pageNumber - 1, pageSize));
 
-                return page.getContent().stream()
+                List<DocumentMediumResponseDto> items = page.getContent().stream()
                                 .map(mapper::toDocumentMediumResponseDto)
                                 .toList();
+
+                return new PageResponse<>(
+                                items,
+                                page.getTotalPages(),
+                                page.getTotalElements(),
+                                page.getNumber() + 1, // add 1 to return 1-based page number in response
+                                page.getSize());
         }
 
         public void deleteById(Long id) throws AccessDeniedException {
@@ -206,6 +217,16 @@ public class DocumentService {
                 return document.isPublic();
         }
 
+        public DocumentFullInfoResponseDto getDocumentInfo(Long id) throws AccessDeniedException {
+                Document document = documentRepository.findById(id)
+                                .orElseThrow(() -> new DocumentNotFoundException("Document not found"));
+
+                isCurrentUserAllowedToViewDocument(id);
+
+                return mapper.toDocumentFullInfoResponseDto(document);
+        }
+
+        // helper methods
         public boolean isCurrentUserAllowedToViewDocument(Long id) throws AccessDeniedException {
                 Document document = documentRepository.findById(id)
                                 .orElseThrow(() -> new DocumentNotFoundException("Document not found"));
@@ -216,7 +237,6 @@ public class DocumentService {
                 return true;
         }
 
-        // helper methods
         private void assertOwner(Long documentId) throws AccessDeniedException {
                 if (getUserRole(documentId) != DocumentRole.OWNER)
                         throw new AccessDeniedException("Forbidden");

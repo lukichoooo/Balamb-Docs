@@ -37,14 +37,9 @@ public class Document {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @PrePersist // auto sets createdAt and updatedAt
+    @PrePersist // auto sets createdAt and updatedAt at the start
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate // auto sets createdAt and updatedAt
-    protected void onUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 

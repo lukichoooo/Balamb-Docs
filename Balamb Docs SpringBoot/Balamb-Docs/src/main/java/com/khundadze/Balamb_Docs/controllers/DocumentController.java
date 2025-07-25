@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.khundadze.Balamb_Docs.dtos.DocumentFullInfoResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentMediumResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentMinimalResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentRequestDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentResponseDto;
+import com.khundadze.Balamb_Docs.dtos.PageResponse;
 import com.khundadze.Balamb_Docs.services.DocumentService;
 
 import jakarta.validation.Valid;
@@ -51,7 +53,7 @@ public class DocumentController {
     }
 
     @GetMapping("/getPage/{pageNumber}")
-    public List<DocumentMediumResponseDto> getPage(@PathVariable("pageNumber") int pageNumber) {
+    public PageResponse<DocumentMediumResponseDto> getPage(@PathVariable("pageNumber") int pageNumber) {
         return documentService.getPage(pageNumber);
     }
 
@@ -95,5 +97,10 @@ public class DocumentController {
     @GetMapping("/isCurrentUserAllowedToViewDocument/{id}")
     public Boolean isCurrentUserAllowedToViewDocument(@PathVariable("id") Long id) throws AccessDeniedException {
         return documentService.isCurrentUserAllowedToViewDocument(id);
+    }
+
+    @GetMapping("/getDocumentFullInfo/{id}")
+    public DocumentFullInfoResponseDto getDocumentInfo(@PathVariable("id") Long id) throws AccessDeniedException {
+        return documentService.getDocumentInfo(id);
     }
 }

@@ -1,14 +1,15 @@
 import styles from "../styleModules/DocumentPage.module.css"
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useState, useEffect } from "react"
-import type { DocumentResponseDto } from "../types"
+import type { DocumentFullInfoResponseDto, DocumentResponseDto } from "../types"
 import Document from "../components/Document";
-import { fetchDocumentByid, updateContentById, deleteDocumentById, updateDescriptionById, togglePublic } from "../services/api_documents";
+import { fetchDocumentByid, updateContentById, deleteDocumentById, updateDescriptionById, togglePublic, getDocumentFullInfo } from "../services/api_documents";
 
 import DocumentPermissionsButton from "../components/DocumentPermissionsButton";
 import { isCurrentUserAllowedToEditDocument } from "../services/api_documentPermissions";
+import DocumentInfoMenu from "../components/DocumentInfomenu";
 
-export default function DocumentPage() { // TODO: add private / public documents
+export default function DocumentPage() {
     const params = useParams();
     const id = Number(params.id);
 
@@ -24,6 +25,8 @@ export default function DocumentPage() { // TODO: add private / public documents
     const [isEditing, setIsEditing] = useState(false);
     const [isEditingDescription, setIsEditingDescription] = useState(false);
     const [descriptionInput, setDescriptionInput] = useState(document.description);
+    const [showInfo, setShowInfo] = useState(false);
+    const [infoData, setInfoData] = useState<DocumentFullInfoResponseDto | null>(null);
 
     const navigate = useNavigate();
 
@@ -110,6 +113,16 @@ export default function DocumentPage() { // TODO: add private / public documents
             .catch(() => alert("Failed to update description"));
     }
 
+    function handleDocumentInfo() {
+        getDocumentFullInfo(id)
+            .then((data) => {
+                setInfoData(data);
+                setShowInfo(true);
+            })
+            .catch(() => alert("Failed to fetch document info"));
+    }
+
+
     function handleTogglePublic() {
         togglePublic(id)
             .then(() => {
@@ -124,30 +137,26 @@ export default function DocumentPage() { // TODO: add private / public documents
             <div className={styles.buttons}>
 
                 {canEdit && (
-                    <button
-                        onClick={handleTogglePublic}
-                        style={{
-                            backgroundColor: document.isPublic ? "green" : "red",
-                            color: "white",
-                            padding: "6px 12px",
-                            border: "none",
-                            borderRadius: "4px",
-                            cursor: "pointer",
-                            transition: "background-color 0.3s ease"
-                        }}
-                    >
-                        {document.isPublic ? "Public" : "Private"}
-                    </button>
+                    <>
+                        <button
+                            onClick={handleTogglePublic}
+                            style={{
+                                backgroundColor: document.isPublic ? "green" : "red",
+                                transition: "background-color 0.3s ease"
+                            }}
+                        >{document.isPublic ? "Public" : "Private"}</button>
+                        <button onClick={handleSave}>Save Changes</button>
+                        <button onClick={handleDelete}>Delete</button>
+
+                    </>
                 )}
 
 
-                <button onClick={handleSave}>Save Changes</button>
 
                 {!isEditing && (
                     <>
                         {canEdit && <button onClick={handleEdit}>Edit</button>}
                         <button onClick={handleShare}>Share</button>
-                        <button onClick={handleDelete}>Delete</button>
                         <DocumentPermissionsButton />
                     </>
                 )}
@@ -185,6 +194,12 @@ export default function DocumentPage() { // TODO: add private / public documents
                 isEditing={isEditing}
                 onContentChange={handleContentChange}
             />
+            <button onClick={handleDocumentInfo}>Document Info</button>
+            {showInfo && infoData && (
+                <DocumentInfoMenu document={infoData} onClose={() => setShowInfo(false)} />
+            )}
+
+
         </div>
     );
 }

@@ -1,13 +1,15 @@
 package com.khundadze.DocumentTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.khundadze.Balamb_Docs.dtos.DocumentFullInfoResponseDto;
+import com.khundadze.Balamb_Docs.dtos.DocumentMediumResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentMinimalResponseDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentRequestDto;
 import com.khundadze.Balamb_Docs.dtos.DocumentResponseDto;
-import com.khundadze.Balamb_Docs.dtos.DocumentMediumResponseDto;
 import com.khundadze.Balamb_Docs.models.Document;
 import com.khundadze.Balamb_Docs.services.DocumentMapper;
 
@@ -54,5 +56,16 @@ public class DocumentMapperTest {
         assertEquals(requestDto.name(), document.getName());
         assertEquals(requestDto.description(), document.getDescription());
         assertEquals(requestDto.content(), document.getContent());
+    }
+
+    @Test
+    public void DocumentFullInfoResponseDto() {
+        Document document = new Document("name", "description", "content");
+        DocumentFullInfoResponseDto responseDto = mapper.toDocumentFullInfoResponseDto(document);
+        assertEquals(document.getId(), responseDto.id());
+        assertEquals(document.getName(), responseDto.name());
+        assertEquals(document.isPublic(), responseDto.isPublic());
+        assertEquals(document.getCreatedAt(), responseDto.createdAt());
+        assertEquals(document.getUpdatedAt(), responseDto.updatedAt());
     }
 }

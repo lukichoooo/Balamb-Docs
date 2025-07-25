@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.khundadze.Balamb_Docs.dtos.UserFullResponseDto;
 import com.khundadze.Balamb_Docs.dtos.UserMinimalResponseDto;
 import com.khundadze.Balamb_Docs.dtos.UserRequestDto;
 import com.khundadze.Balamb_Docs.dtos.UserResponseDto;
@@ -52,5 +53,11 @@ public class UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
         return userMapper.toUserResponseDto(user);
+    }
+
+    public UserFullResponseDto findFullById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found with id: " + id));
+        return userMapper.toUserFullResponseDto(user);
     }
 }

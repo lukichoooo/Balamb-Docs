@@ -37,7 +37,7 @@ export default function DocumentSearchBox() {
             fetchDocumentsByNameLike(searchInput)
                 .then((data: DocumentMinimalResponseDto[]) => setSearchResult(data))
                 .catch(() => setSearchResult([]));
-        }, 500);
+        }, 200);
 
         return () => {
             clearTimeout(interval);

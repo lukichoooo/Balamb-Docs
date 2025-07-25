@@ -2,6 +2,7 @@ package com.khundadze.Balamb_Docs.services;
 
 import org.springframework.stereotype.Service;
 
+import com.khundadze.Balamb_Docs.dtos.UserFullResponseDto;
 import com.khundadze.Balamb_Docs.dtos.UserMinimalResponseDto;
 import com.khundadze.Balamb_Docs.dtos.UserRequestDto;
 import com.khundadze.Balamb_Docs.dtos.UserResponseDto;
@@ -25,5 +26,12 @@ public class UserMapper {
 
     public UserMinimalResponseDto toUserMinimalResponseDto(User user) {
         return new UserMinimalResponseDto(user.getId(), user.getUsername());
+    }
+
+    public UserFullResponseDto toUserFullResponseDto(User user) {
+        return new UserFullResponseDto(user.getId(),
+                user.getUsername(),
+                user.getGlobalRole(),
+                user.getCreatedAt());
     }
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import type { DocumentMinimalResponseDto, User } from "../types";
 import { findById } from "../services/api_users";
 import { fetchDocumentsByCollaboratorId, getDocumentsOwnedByUserId } from "../services/api_documents";
@@ -14,6 +14,7 @@ export default function UserProfile() {
     const [isMyProfile, setIsMyProfile] = useState(false);
 
     const location = useLocation();
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (!userid) return;
@@ -46,6 +47,10 @@ export default function UserProfile() {
 
     }, [location.pathname, userid]);
 
+    function handleClickAccountInfo() {
+        navigate(`/accountInfo/${localStorage.getItem("id")}`);
+    }
+
     return (
         <div className={styles.profileContainer}>
             <h1>User Profile</h1>
@@ -76,7 +81,7 @@ export default function UserProfile() {
                 {collaboratedDocuments.length === 0 && <p>No collaborated documents.</p>}
             </div>
 
-            {isMyProfile && <button className={styles.settingsButton}>Settings</button>}
+            {isMyProfile && <button onClick={handleClickAccountInfo} className={styles.settingsButton}>Account Info</button>}
         </div>
     );
 }

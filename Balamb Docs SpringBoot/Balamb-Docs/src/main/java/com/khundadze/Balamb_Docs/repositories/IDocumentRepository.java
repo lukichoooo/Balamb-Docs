@@ -23,26 +23,26 @@ public interface IDocumentRepository extends JpaRepository<Document, Long> {
         @Override
         Page<Document> findAll(Pageable pageable);
 
+        @Override
+        Optional<Document> findById(Long id);
+
         @Modifying
         @Transactional
-        @Query("UPDATE Document d SET d.content = :content WHERE d.id = :id")
+        @Query("UPDATE Document d SET d.content = :content, d.updatedAt = CURRENT_TIMESTAMP WHERE d.id = :id")
         int updateContentById(
                         @Param("id") Long id,
                         @Param("content") String content);
 
         @Modifying
         @Transactional
-        @Query("UPDATE Document d SET d.name = :name WHERE d.id = :id")
+        @Query("UPDATE Document d SET d.name = :name, d.updatedAt = CURRENT_TIMESTAMP WHERE d.id = :id")
         int updateNameById(
                         @Param("id") Long id,
                         @Param("name") String name);
 
-        @Override
-        Optional<Document> findById(Long id);
-
         @Modifying
         @Transactional
-        @Query("UPDATE Document d SET d.description = :description WHERE d.id = :id")
+        @Query("UPDATE Document d SET d.description = :description, d.updatedAt = CURRENT_TIMESTAMP WHERE d.id = :id")
         int updateDescriptionById(
                         @Param("id") Long id,
                         @Param("description") String description);

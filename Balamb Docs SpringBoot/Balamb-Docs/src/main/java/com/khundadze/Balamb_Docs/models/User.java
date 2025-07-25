@@ -20,7 +20,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,18 +41,9 @@ public class User implements UserDetails {
     @Column(updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
-
-    @PrePersist // auto sets createdAt and updatedAt
+    @PrePersist // auto sets createdAt
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate // auto sets createdAt and updatedAt
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
     }
 
     @Column(unique = true)

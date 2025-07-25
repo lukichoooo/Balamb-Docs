@@ -32,6 +32,7 @@ const RegisterPage = () => {
                     {message && <div className={styles.alert}>{message}</div>}
                     <form onSubmit={handleRegister}>
                         <div className={styles['form-group']}>
+                            <p className={styles['form-title']}>Create New Account</p>
                             <label>Username</label>
                             <input
                                 type="text"
