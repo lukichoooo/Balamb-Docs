@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
-public class UserController {
+public class UserController { // TODO add getting all user info for settings and making adjustments maybe??
 
     private final UserService userService;
 

@@ -123,7 +123,7 @@ public class Permissions_SecurityTests {
     @Test
     public void changePermissionForNonExistentDocument_ShouldThrow() {
         setupUserWithRole(DocumentRole.OWNER);
-        User targetUser = createAndMockTargetViewer(2L, "targetUser");
+        createAndMockTargetViewer(2L, "targetUser");
 
         // documentRepository returns empty for document id
         when(documentRepository.findById(999L)).thenReturn(Optional.empty());

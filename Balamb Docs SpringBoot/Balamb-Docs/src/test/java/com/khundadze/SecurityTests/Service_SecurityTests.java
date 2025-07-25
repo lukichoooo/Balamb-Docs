@@ -5,13 +5,11 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
@@ -244,34 +242,6 @@ public class Service_SecurityTests {
     }
 
     // helper methods
-    private User createAndMockTargetViewer(Long id, String username) {
-        return createAndMockTargetUserWithRole(id, username, DocumentRole.VIEWER);
-    }
-
-    private User createAndMockTargetEditor(Long id, String username) {
-        return createAndMockTargetUserWithRole(id, username, DocumentRole.EDITOR);
-    }
-
-    private User createAndMockTargetUserWithRole(Long id, String username, DocumentRole role) {
-        User user = new User();
-        user.setId(id);
-        user.setUsername(username);
-
-        Document document = new Document();
-        document.setId(1L);
-
-        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
-        when(documentPermissionRepository.findByDocument_IdAndUser_Id(document.getId(), user.getId()))
-                .thenReturn(Optional.of(new DocumentPermission(
-                        new DocumentPermissionId(document.getId(), user.getId()),
-                        document,
-                        user,
-                        role)));
-        when(documentRepository.findById(document.getId())).thenReturn(Optional.of(document));
-        when(documentRepository.save(document)).thenReturn(document);
-
-        return user;
-    }
 
     private void setupUserWithRole(DocumentRole role) {
         User user = new User();

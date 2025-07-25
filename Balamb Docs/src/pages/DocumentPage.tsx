@@ -136,18 +136,18 @@ export default function DocumentPage() { // TODO: add private / public documents
                             transition: "background-color 0.3s ease"
                         }}
                     >
+                        <button onClick={handleSave}>Save Changes</button>
+                        <button onClick={handleDelete}>Delete</button>
                         {document.isPublic ? "Public" : "Private"}
                     </button>
                 )}
 
 
-                <button onClick={handleSave}>Save Changes</button>
 
                 {!isEditing && (
                     <>
                         {canEdit && <button onClick={handleEdit}>Edit</button>}
                         <button onClick={handleShare}>Share</button>
-                        <button onClick={handleDelete}>Delete</button>
                         <DocumentPermissionsButton />
                     </>
                 )}
