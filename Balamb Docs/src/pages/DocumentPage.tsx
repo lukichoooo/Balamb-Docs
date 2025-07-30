@@ -1,5 +1,5 @@
 import styles from "../styleModules/DocumentPage.module.css"
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react"
 import type { DocumentFullInfoResponseDto, DocumentResponseDto } from "../types"
 import Document from "../components/Document";

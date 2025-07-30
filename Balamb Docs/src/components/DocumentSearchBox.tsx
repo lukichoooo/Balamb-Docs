@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import styles from "../styleModules/UserSearchBox.module.css";
 import type { DocumentMinimalResponseDto } from "../types";
 import { fetchDocumentsByNameLike } from "../services/api_documents";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { isCurrentUserAllowedToViewDocument } from "../services/api_documents";
 
 export default function DocumentSearchBox() {
