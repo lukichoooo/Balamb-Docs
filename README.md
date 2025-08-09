@@ -6,11 +6,11 @@ Built using **Java Spring Boot** for the back end and **React** for the front en
 ---
 
 ## Why
-I created Balamb Docs to offer a **simple and fast** way for users to upload and manage small text documents. My goal was to make:
+I created Balamb Docs to offer a **simple and fast** way for users to manage small text documents. My goal was to make:
 - **Editing** quick and intuitive for brief notes or drafts.
 - **Sharing** and permission management straightforward for collaboration.
 
-I wanted a lightweight alternative to bulky editors—perfect for jotting down ideas on the fly.
+I wanted a lightweight alternative to bulky editors, perfect for jotting down ideas on the fly.
 
 ---
 
@@ -35,7 +35,7 @@ I wanted a lightweight alternative to bulky editors—perfect for jotting down i
 - Java Spring Boot  
 - Spring Security  
 - Spring Data JPA  
-- MySQL  ## 📖 Usage
+- MySQL
 
 
 ---
@@ -62,7 +62,7 @@ I wanted a lightweight alternative to bulky editors—perfect for jotting down i
 
 ![Screenshot 5](https://github.com/user-attachments/assets/d45fc409-40fd-493b-8436-497c329effab)
 
-## 📖 Usage
+## Using Web Service
 
 **the deployed site needs at least a minute to start up while its inactive**
 if you want to log in / register after a long interval 
